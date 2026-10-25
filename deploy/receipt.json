@@ -1,31 +1,11 @@
 {
-  "targetHash": "fea747550844f41f9c8e905596ac82d5f0697304def0f1f15e80f7fd96a74440",
-  "signature": {
-    "signedIssuerDomain": "cvtrust.com",
-    "signature": "INw5InoDB6BUnHLoTKbeTSUA+hqhwUydbfvbJxQrrM82OJJPN/AALPKnigx2hI0ZvZ2mUfQbV7oYM+dKICU/pXU=",
-    "signedHash": "5fc31113bc2cc483714f3dc30c94a098f2975ecf71bc6dee14daf23c26613cd8",
-    "identityURL": "https://identity.cvtrust.com:3001/identity",
-    "@context": "https://w3id.org/woleet/signature/v2",
-    "pubKey": "1HkQBqqPhx4ReSKR2NwhzsJFhwu2qaYvmU",
-    "signedIdentity": "CN=ESGF,O=ESGF"
-  },
-  "merkleRoot": "461dada0de646ce547d2d1f160aa798e6767832c30557f5918002916c5c1de43",
-  "proof": [
-    {"left": "d3166ac0a858184c277492efe10bb6de5f31a841e39d50ed49122788111259bb"},
-    {"left": "968b5c673634952640524c95fd43c173e0ead585b02822564c1d6f30bae82457"},
-    {"right": "5be8834d3373267d909a709362b74f84adde0df35a1497bed15f438e13f6747f"},
-    {"left": "5d23f6e051bfeb882cbb49c061a279c07b3bb11b78e7e5ebfcb6d10c80d5c2fa"},
-    {"left": "b09b8e630c8382b71c4cfa527de63835bd1e5ab23fc229e6a918f292374d567a"},
-    {"left": "457e9a9b83c4cb58dc727201cef877a68b17f9320265773f00a715c03b26b524"},
-    {"right": "9f1d6a715e94a6c30069d51c68e4b1164b77611fc0985d1710c9929acaae7c80"},
-    {"left": "06676d90c8fbd928edfd77734e40ff2a6ee97a80066b79253069d13855df7baa"},
-    {"left": "b24945246147179442fcf9f9b19a6d86909d94547bef2f5e46a3580b2b3f8835"},
-    {"right": "490eddf76f3d07064dc7c239a4773c473d3870b5bdedb1fb99d3aa7b76695916"},
-    {"right": "3aa5055a23a3670dee3f4bf6454577506405924ef7ecfce086f2a5295e0f66fa"}
-  ],
-  "anchors": [{
-    "sourceId": "e74cc458d2dde12ebf65152f9a85ccfbdf3bf437ad33b957c6cabbc2ae38a4e4",
-    "type": "BTCOpReturn"
-  }],
-  "type": "ChainpointSHA256v2",
-  "@context": "https://w3id.org/chainpoint/v2"
+  "type": "SHA256FileChecksum",
+  "version": 1,
+  "hashAlgorithm": "SHA-256",
+  "targetHash": "49dffa43d573e002b2cdbf81582c7c9451e1ff80e9f55b63d7c409c34514e348",
+  "pdf_file": "Anouar_AMRI_Expert(e)_en_Ingénierie_Financière_EIF_-_JUINS2021.pdf",
+  "preview": "preview-diplome.png",
+  "verification_scope": "published-file-integrity-only",
+  "bitcoin_anchor": "not_verified",
+  "issuer_signature": "not_verified"
+}
