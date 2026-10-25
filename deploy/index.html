@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
+<title>Smart Certificate</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: centered 800px trust column on a mint-to-sky wash, mirroring the reference verification page. Single light look, by choice. */
+:root{
+  --wash-a:#eefcf6; --wash-b:#dceafd;
+  --ink:#1b2333; --ink-soft:#5b6578; --line:#e3e8f1;
+  --paper:#ffffff; --panel:#f7f9fc;
+  --brand:#4a6cf7; --brand-deep:#3554e0; --brand-ink:#ffffff;
+  --ok:#66c23a; --ok-deep:#4fa526;
+  --night:#0d0f16; --warn:#d98a00; --bad:#d6453d;
+  --f-ui:"Roboto","SanFranciscoDisplay-Regular",-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif; /* reference: html{font-family:Roboto}, body stack */
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r:6px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;font-family:var(--f-ui);color:var(--ink);background:linear-gradient(100deg,var(--wash-a) 0%,#eaf6fb 50%,var(--wash-b) 100%);background-color:var(--wash-a);min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #9fb2ff;outline-offset:2px}
+
+.topbar{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:14px max(18px,env(safe-area-inset-right,0px)) 0 max(18px,env(safe-area-inset-left,0px));pointer-events:none;z-index:5}
+.topbar>*{pointer-events:auto}
+.logo{width:34px;height:34px;display:block}
+.lang{border:1.5px solid #8fb1d8;background:rgba(255,255,255,.55);color:#3c78b5;font-weight:700;font-size:13px;letter-spacing:.04em;border-radius:4px;padding:7px 12px}
+.lang:hover{background:#fff}
+
+.wrap{max-width:802px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;border-radius:10px;animation:appIn .5s ease both}
+/* reference #app: transform scale(.95)->1 + opacity, transition .5s; starts near-visible so the page is complete at rest */
+@keyframes appIn{from{opacity:.4;transform:scale(.95)}to{opacity:1;transform:none}}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.card{border-radius:3px;min-width:0}
+.congrats{background:var(--ok);color:#fff;padding:12px 20px 14px;font-size:13.5px;line-height:1.3;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.congrats p{margin:0}
+.congrats .hi{opacity:.92;margin-bottom:3px}
+.congrats .beta{display:inline-block;margin-top:7px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.22);padding:2px 7px;border-radius:3px}
+.owner{background:var(--paper);padding:12px 20px 14px}
+.owner .lbl{color:#8a93a3;font-size:13px}
+.owner .name{font-size:20px;font-weight:700;margin:2px 0 6px;letter-spacing:.005em}
+.linkbtn{background:none;border:0;padding:0;color:#2f6fd6;font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:4px}
+.linkbtn:hover{text-decoration:underline}
+.issuer{background:var(--brand);color:#fff;border:0;min-height:172px;padding:24px 40px;text-align:center;font-weight:700;font-size:13.5px;line-height:1.35;display:grid;place-items:center;transition:background .15s}
+.issuer:hover{background:var(--brand-deep)}
+
+.video{position:relative;background:radial-gradient(120% 90% at 78% 55%,#2a1840 0%,#120f1d 45%,var(--night) 80%);color:#fff;min-height:172px;overflow:hidden;border:0;text-align:left;padding:0}
+.video.unavail{cursor:default}
+.video .inner{position:absolute;inset:0;padding:38px 48px;display:flex;flex-direction:column;justify-content:center}
+.video .yt{display:flex;align-items:center;gap:7px;font-weight:800;font-size:17px;letter-spacing:-.01em}
+.video .play{width:26px;height:18px;border-radius:5px;background:#ff2b2b;display:grid;place-items:center}
+.video h3{margin:12px 0 6px;font-size:17px;font-weight:800}
+.video small{font-size:12.5px;opacity:.85}
+.video .bar{position:absolute;left:0;bottom:0;height:3px;background:#ff2b2b;width:0}
+.video.playing .bar{animation:fill 16s linear forwards}
+@keyframes fill{to{width:100%}}
+.frames{position:absolute;inset:0;padding:26px 34px;display:none;flex-direction:column;justify-content:center;gap:8px}
+.video.playing .inner{display:none}
+.video.playing .frames{display:flex}
+.frame{display:none;animation:rise .5s ease both}
+.frame.on{display:block}
+.frame .step{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;color:#ff8a8a;text-transform:uppercase}
+.frame b{display:block;font-size:17px;margin:4px 0}
+.frame span{font-size:12.5px;opacity:.85;line-height:1.45}
+.frame code{font-family:var(--f-mono);font-size:11px;color:#c9d4ff;word-break:break-all}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.doc{background:var(--panel);padding:0 25.2px 25.2px;border-radius:3px} /* reference: .document .section-content padding 25.2px, padding-top 0 */
+.doc>.secured{margin-top:26px}
+@media (min-width:1428px){.doc{display:grid;gap:10px}} /* reference: gap 10px >=1428px */
+.secured{position:relative;display:flex;align-items:center;margin:12px 30px 18px 0}
+.seal{position:relative;z-index:2;width:60px;height:60px;border-radius:50%;background:var(--brand);display:grid;place-items:center;box-shadow:0 0 0 4px var(--panel);flex:none}
+.seal svg{width:30px;height:30px}
+.sbar{flex:1;min-width:0;margin-left:-14px;background:var(--brand);color:#fff;height:32px;border-radius:0 4px 4px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px 0 30px;font-size:13px}
+.sbar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.see{background:var(--brand);color:#fff;border:1px solid rgba(255,255,255,.65);border-radius:3px;padding:3px 9px;font-weight:700;font-size:13px;display:inline-flex;gap:6px;align-items:center;flex:none}
+.see:hover{background:#fff;color:var(--brand)}
+
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:12px;align-items:start}
+.sheet{position:relative;background:#fff;padding:14px;min-width:0}
+.sheet::before,.sheet::after{content:"";position:absolute;width:14px;height:14px;border:1px solid #c7ccd6}
+.sheet::before{top:-1px;left:-1px;border-width:0 1px 1px 0}
+.sheet::after{bottom:-1px;right:-1px;border-width:1px 0 0 1px}
+.sheet img{display:block;width:100%;height:auto;aspect-ratio:1.414/1;object-fit:contain;background:#fbfaf6}
+.sheet .ph{aspect-ratio:1.414/1;display:grid;place-items:center;color:var(--ink-soft);font-size:13px;background:repeating-linear-gradient(45deg,#fafbfd 0 10px,#f3f5f9 10px 20px)}
+.status{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--ink-soft)}
+.status b{color:var(--ink);font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:#e6f6dc;color:#2f7d13}
+.chip.pend{background:#fff3d6;color:#8a5a00}
+.chip i{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+.share{display:flex;flex-direction:column;gap:7px;padding-top:2px}
+.share a,.share button{width:33px;height:33px;border-radius:50%;display:grid;place-items:center;color:#fff;border:0;text-decoration:none;transition:transform .12s}
+.share a:hover,.share button:hover{transform:scale(1.08)}
+.share svg{width:15px;height:15px;fill:currentColor}
+.s-in{background:#0a66c2}.s-fb{background:#1877f2}.s-x{background:#1da1f2}.s-wa{background:#25d366}.s-ml{background:#334155}
+
+.actions{display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;gap:12px;margin-top:40px;padding:0 30px 0 30px}
+.act{background:var(--brand);color:#fff;border:0;border-radius:3px;padding:10px 14px;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 1px 2px rgba(53,84,224,.25)}
+.act:hover{background:var(--brand-deep)}
+.act svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:1.6}
+.act[aria-busy="true"]{opacity:.7}
+
+a.issuer{text-decoration:none}
+a.vlink{text-decoration:none;display:block}
+.logocard{background:#fff;min-height:172px;display:grid;place-items:center;padding:24px;margin-top:0}
+.logocard img{max-width:130px;max-height:96px;width:auto;height:auto}
+.logoword{font-weight:500;color:#5b6578;font-size:15px;letter-spacing:.02em;text-align:center}
+/* owner profile view, mirrors the reference profile page */
+.profile{max-width:826px;margin:56px auto 0}
+.p-head{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.avatar{width:112px;height:112px;background:#e2e2e2;border-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,.2);display:grid;place-items:center;flex:none}
+.p-name{margin:-4px 0 0;font-size:clamp(30px,5.2vw,50px);font-weight:700;line-height:1.15;background:linear-gradient(90deg,#5cc6dc 0%,#7fd0b6 55%,#a6dc93 100%);-webkit-background-clip:text;background-clip:text;color:transparent;min-width:0;overflow-wrap:anywhere}
+.p-search{display:block;margin-top:84px;width:100%;background:#cdebea;border:1px solid #a7d8d4;border-radius:2px;padding:7px 9px;font:inherit;font-size:12px;color:var(--ink)}
+.p-search::placeholder{color:#3d4a55}
+.p-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,263px));gap:16px;margin-top:19px}
+.p-card{background:#fff;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.13);text-decoration:none;color:var(--ink);display:block;overflow:hidden;transition:box-shadow .15s}
+.p-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.16)}
+.p-card .th{position:relative;padding:4px 4px 0}
+.p-card img{width:100%;display:block;aspect-ratio:1.414/1;object-fit:cover}
+.p-card .mag{position:absolute;right:6px;bottom:-4px;width:18px;height:18px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.p-meta{padding:16px 13px 14px}
+.p-iss{color:#1e6fe0;font-weight:700;font-size:13.5px}
+.p-t{font-size:13px;margin-top:5px}
+.p-s{color:#9ba2ad;font-size:12px;text-transform:uppercase;margin-top:4px}
+
+/* modals */
+.veil{position:fixed;inset:0;background:rgba(15,20,35,.55);display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));z-index:20;animation:fade .15s ease}
+@keyframes fade{from{opacity:0}}
+.modal{width:min(960px,100%);max-height:calc(100vh - 40px);overflow:auto;border-radius:12px;padding:30px 50px 34px;position:relative}
+.modal.blue{background:var(--brand);color:#fff}
+.modal.white{background:#fff;color:var(--ink);width:min(720px,100%)}
+.modal h2{margin:0 0 6px;font-size:21px}
+.modal .lead{margin:0 0 22px;font-size:14.5px}
+.x{position:absolute;top:12px;right:14px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.18);color:inherit;font-size:20px;line-height:1}
+.white .x{background:#eef1f7}
+.pt{margin-bottom:18px}
+.pt h4{display:flex;align-items:center;gap:14px;margin:0 0 7px;font-size:14.5px}
+.pt h4 svg{width:22px;height:16px;flex:none}
+.pt p{margin:0;font-size:14px;line-height:1.5;max-width:none}
+.kv{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:8px 16px;font-size:13.5px;margin:10px 0 4px}
+.kv dt{color:var(--ink-soft)}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.mono{font-family:var(--f-mono);font-size:12px}
+.checks{list-style:none;padding:0;margin:14px 0;display:grid;gap:10px}
+.checks li{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start;padding:12px 14px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;line-height:1.45}
+.checks li small{display:block;color:var(--ink-soft);margin-top:3px;overflow-wrap:anywhere}
+.dot{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff;background:#b9c1cf}
+.dot.ok{background:var(--ok-deep)} .dot.wait{background:var(--warn)} .dot.ko{background:var(--bad)}
+.drop{margin-top:16px;border:2px dashed #b8c4e0;border-radius:10px;padding:18px;text-align:center;font-size:13.5px;color:var(--ink-soft);background:#f8faff}
+.drop.over{border-color:var(--brand);background:#eef2ff}
+.drop label{color:var(--brand);font-weight:700;cursor:pointer;text-decoration:underline}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.res{margin-top:10px;font-weight:600}
+.res.ok{color:var(--ok-deep)} .res.ko{color:var(--bad)}
+.ext{color:#2f6fd6;font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1b2333;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;z-index:40;max-width:calc(100% - 32px)}
+.copyrow{display:flex;gap:8px;margin-top:8px}
+.copyrow input{flex:1;min-width:0;font-family:var(--f-mono);font-size:12px;padding:8px;border:1px solid var(--line);border-radius:6px}
+.copyrow button{border:0;background:var(--brand);color:#fff;border-radius:6px;padding:0 12px;font-weight:700}
+
+@media (max-width:720px){
+  .profile{margin-top:8px}.avatar{width:84px;height:84px}.avatar svg{width:60px;height:60px}.p-search{margin-top:40px}.p-grid{grid-template-columns:minmax(0,1fr)}
+  body{padding-top:62px}
+  .row{grid-template-columns:minmax(0,1fr)}
+  .issuer,.video{min-height:150px}
+  .doc{padding:16px 12px 20px}
+  .secured{margin:6px 0 14px}
+  .seal{width:48px;height:48px}.seal svg{width:24px;height:24px}
+  .sbar{padding-left:22px;font-size:12px}
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .share{flex-direction:row;justify-content:center}
+  .actions{grid-template-columns:minmax(0,1fr);padding:0;margin-top:22px}
+  .act{justify-content:center}
+  .modal{padding:26px 20px 26px}
+  .kv{grid-template-columns:1fr;gap:2px 0}.kv dd{margin-bottom:8px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="topbar">
+  <svg class="logo" viewBox="0 0 40 40" aria-label="Smart Certificate" role="img"><path d="M33 13.5A15 15 0 1 1 26 6.4" fill="none" stroke="#2b8cf0" stroke-width="3.4" stroke-linecap="round"/><path d="M12 19.5l6.2 6.2L35 8.5" fill="none" stroke="#2b8cf0" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <button class="lang" id="lang" type="button" aria-label="Switch language">EN</button>
+</header>
+
+<main class="wrap">
+  <div class="row">
+    <section class="card congrats" aria-live="polite">
+      <p class="hi" data-i="hi">Félicitations !</p>
+      <p id="congratsTxt" data-i="congrats">Vous avez ouvert un document certifié Smart Certificate émis par <b>l'ESGF. Toute modification du fichier est détectable et l'identité de son titulaire est attestée.</p>
+          </section>
+    <section class="card owner">
+      <div class="lbl" data-i="owner_lbl">Titulaire du document</div>
+      <div class="name" id="ownerName">Mohamed Anouar AMRI</div>
+      <a class="linkbtn" href="#profil"><span data-i="owner_link">Voir le profil du titulaire</span> <svg width="9" height="12" viewBox="0 0 9 12"><path d="M2 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
+    </section>
+  </div>
+
+  <div class="row">
+    <a class="card issuer" id="issuerLink" target="_blank" rel="noopener" href="#" hidden><span id="issuerLinkTxt"></span></a>
+    <button class="card issuer" id="issuerBtn" type="button" data-open="mIssuer"><span data-i="issuer_tile">Cliquez ici et découvrez plus d'informations à propos de l'Institut Galileo </span></button>
+    <a class="card video vlink" id="mediaLink" target="_blank" rel="noopener" href="#" hidden>
+      <div class="inner"><div class="yt"><span class="play"><svg width="9" height="10" viewBox="0 0 9 10"><path d="M0 0l9 5-9 5z" fill="#fff"/></svg></span><span id="mediaSrc"></span></div><h3 id="mediaLabel"></h3><small id="mediaHint"></small></div>
+    </a>
+    <button class="card video" type="button" id="video" aria-label="Lire la présentation">
+      <div class="inner">
+        <div class="yt"><span class="play"><svg width="9" height="10" viewBox="0 0 9 10"><path d="M0 0l9 5-9 5z" fill="#fff"/></svg></span>Smart Certificate</div>
+        <h3 data-i="vid_t">Comment ça marche, en 16 secondes</h3>
+        <small data-i="vid_s">Cliquez pour lancer la présentation</small>
+      </div>
+      <div class="frames" aria-live="polite">
+        <div class="frame" data-f="0"><div class="step">01 · Empreinte</div><b data-i="f0b">Le PDF est réduit à 64 caractères</b><span><code id="fHash">SHA-256 …</code></span></div>
+        <div class="frame" data-f="1"><div class="step">02 · Signature</div><b data-i="f1b">L'émetteur scelle le PDF avec sa clé</b><span data-i="f1s">Signature PAdES (ETSI EN 319 142) intégrée au fichier : toute retouche la brise.</span></div>
+        <div class="frame" data-f="2"><div class="step">03 · Bitcoin</div><b data-i="f2b">L'empreinte est ancrée dans Bitcoin</b><span data-i="f2s">Via OpenTimestamps : une preuve de date que personne, nous compris, ne peut réécrire.</span></div>
+        <div class="frame" data-f="3"><div class="step">04 · Vérification</div><b data-i="f3b">N'importe qui revérifie, sans compte</b><span data-i="f3s">QR code ou lien → cette page recalcule l'empreinte et la compare.</span></div>
+      </div>
+      <div class="bar"></div>
+    </button>
+  </div>
+
+  <section class="doc">
+    <div class="secured">
+      <div class="seal"><svg viewBox="0 0 40 40"><path d="M33 13.5A15 15 0 1 1 26 6.4" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><path d="M12 19.5l6.2 6.2L35 8.5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="sbar"><span data-i="secured">Ce document est sécurisé par <b>Smart Certificate</b></span>
+        <button class="see" type="button" data-open="mHow"><span data-i="see">Voir comment</span> <svg width="8" height="12" viewBox="0 0 8 12"><path d="M1.5 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button></div>
+    </div>
+
+    <div class="stage">
+      <figure class="sheet" style="margin:0">
+        <img id="preview" src="preview.png" alt="Aperçu du certificat" hidden>
+        <div class="ph" id="ph" data-i="loading">Chargement de l'aperçu…</div>
+      </figure>
+      <nav class="share" aria-label="Partager">
+        <a class="s-in" id="shIn" target="_blank" rel="noopener" aria-label="Partager sur LinkedIn" href="https://www.linkedin.com/"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.6 8.65 21 11.2 21 14.5V21h-4v-5.8c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.52-2.25 3.1V21H9z"/></svg></a>
+        <a class="s-fb" id="shFb" target="_blank" rel="noopener" aria-label="Partager sur Facebook" href="https://www.facebook.com/"><svg viewBox="0 0 24 24"><path d="M14 8V6.3c0-.8.2-1.3 1.4-1.3H17V2h-2.6C11.4 2 10.5 3.7 10.5 6v2H8v3h2.5v11H14V11h2.7l.4-3z"/></svg></a>
+        <a class="s-x" id="shX" target="_blank" rel="noopener" aria-label="Partager sur X (Twitter)" href="https://twitter.com/"><svg viewBox="0 0 24 24"><path d="M22 5.9c-.7.3-1.5.5-2.3.6.8-.5 1.5-1.3 1.8-2.2-.8.5-1.7.8-2.6 1a4.1 4.1 0 0 0-7 3.7A11.6 11.6 0 0 1 3.4 4.7a4.1 4.1 0 0 0 1.3 5.5c-.7 0-1.3-.2-1.9-.5 0 2 1.4 3.7 3.3 4.1-.6.2-1.2.2-1.9.1.5 1.6 2 2.8 3.8 2.9A8.2 8.2 0 0 1 2 18.5 11.6 11.6 0 0 0 8.3 20.3c7.5 0 11.7-6.3 11.7-11.7v-.5c.8-.6 1.5-1.3 2-2.2z"/></svg></a>
+        <a class="s-wa" id="shWa" target="_blank" rel="noopener" aria-label="Partager sur WhatsApp" href="https://wa.me/"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg></a>
+        <button class="s-ml" type="button" data-open="mMail" aria-label="Partager par e-mail"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3zm2 2v.3l7 4.6 7-4.6V7zm14 2.7-7 4.6-7-4.6V17h14z"/></svg></button>
+      </nav>
+    </div>
+    <div class="status" id="status"></div>
+
+    <div class="actions">
+      <button class="act" type="button" id="btnReceipt"><span data-i="b1">Télécharger le reçu blockchain</span><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4v14.4H6z"/><path d="M14 2.8v4h4M9 12h6M9 15h6M9 18h4"/></svg></button>
+      <button class="act" type="button" data-open="mValidate"><span data-i="b2">Valider la réception blockchain</span><svg viewBox="0 0 24 24"><path d="M5 2.8h9l4 4v6"/><path d="M5 2.8v18.4h7M8 9h6M8 12h5"/><circle cx="16.5" cy="17" r="3.2"/><path d="M19 19.5l2.4 2.4"/></svg></button>
+      <button class="act" type="button" id="btnPdf"><span data-i="b3">Télécharger le PDF sécurisé</span><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4v14.4H6z"/><rect x="9" y="12.5" width="6" height="5" rx=".8"/><path d="M10.2 12.5v-1.3a1.8 1.8 0 0 1 3.6 0v1.3"/></svg></button>
+    </div>
+  </section>
+  <div class="row"><div class="card logocard"><img id="logoImg" alt="" hidden><span id="logoWord" class="logoword"></span></div></div>
+</main>
+
+<section class="profile" id="profil" hidden aria-labelledby="pName">
+  <div class="p-head">
+    <div class="avatar" aria-hidden="true"><svg width="82" height="82" viewBox="0 0 82 82"><circle cx="41" cy="41" r="37" fill="none" stroke="#fff" stroke-width="3.2"/><circle cx="41" cy="31" r="12" fill="none" stroke="#fff" stroke-width="3.2"/><path d="M17 66c5-11 14-16 24-16s19 5 24 16" fill="none" stroke="#fff" stroke-width="3.2"/></svg></div>
+    <h1 class="p-name" id="pName">—</h1>
+  </div>
+  <input class="p-search" id="pSearch" type="search" placeholder="Search" aria-label="Search">
+  <div class="p-grid" id="pGrid">
+    <a class="p-card" href="#document" id="pCard">
+      <div class="th"><img id="pImg" src="preview.png" alt=""><span class="mag"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="5" cy="5" r="3.8" fill="none" stroke="#333" stroke-width="1.2"/><path d="M8 8l3 3" stroke="#333" stroke-width="1.2"/></svg></span></div>
+      <div class="p-meta"><div class="p-iss" id="pIss"></div><div class="p-t" id="pT"></div><div class="p-s" id="pS"></div></div>
+    </a>
+  </div>
+</section>
+
+<!-- See how -->
+<div class="veil" id="mHow" hidden><div class="modal blue" role="dialog" aria-modal="true" aria-labelledby="hHow">
+  <button class="x" type="button" data-close aria-label="Fermer">×</button>
+  <h2 id="hHow" data-i="how_t">Qu'est-ce qu'un document Smart Certificate ?</h2>
+  <p class="lead" data-i="how_l">C'est un document qui certifie 3 choses fondamentales :</p>
+  <div class="pt"><h4><svg viewBox="0 0 22 16"><path d="M1 8.5l5 5L21 1" fill="none" stroke="#fff" stroke-width="2"/><path d="M6.5 8.5l2 2L14 5" fill="none" stroke="#fff" stroke-width="2"/></svg><span data-i="how1t">Intégrité</span></h4><p data-i="how1">Nous garantissons que le document n'a pas été modifié depuis sa création. Il contient une signature valide et une empreinte immuable enregistrée sur la blockchain Bitcoin, offrant une méthode décentralisée de vérification de son intégrité.</p></div>
+  <div class="pt"><h4><svg viewBox="0 0 22 16"><path d="M1 8.5l5 5L21 1" fill="none" stroke="#fff" stroke-width="2"/><path d="M6.5 8.5l2 2L14 5" fill="none" stroke="#fff" stroke-width="2"/></svg><span data-i="how2t">Authenticité</span></h4><p data-i="how2">Nous certifions l'identité de l'émetteur. L'organisation et ses membres sont légitimes et autorisés à émettre ce document.</p></div>
+  <div class="pt"><h4><svg viewBox="0 0 22 16"><path d="M1 8.5l5 5L21 1" fill="none" stroke="#fff" stroke-width="2"/><path d="M6.5 8.5l2 2L14 5" fill="none" stroke="#fff" stroke-width="2"/></svg><span data-i="how3t">Validité</span></h4><p data-i="how3">Nous assurons la validité en temps réel du document. Tout changement — mise à jour, révocation, expiration ou prolongation — est instantanément reflété sur cette page.</p></div>
+</div></div>
+
+<!-- Owner -->
+<div class="veil" id="mOwner" hidden><div class="modal white" role="dialog" aria-modal="true" aria-labelledby="hOwner">
+  <button class="x" type="button" data-close aria-label="Fermer">×</button>
+  <h2 id="hOwner" data-i="own_t">Profil du titulaire</h2>
+  <p class="lead" data-i="own_l">Ce que l'émetteur a vérifié sur la personne avant d'émettre le document.</p>
+  <dl class="kv" id="ownerKv"></dl>
+</div></div>
+
+<!-- Issuer -->
+<div class="veil" id="mIssuer" hidden><div class="modal white" role="dialog" aria-modal="true" aria-labelledby="hIssuer">
+  <button class="x" type="button" data-close aria-label="Fermer">×</button>
+  <h2 id="hIssuer" data-i="iss_t">L'émetteur</h2>
+    <dl class="kv" id="ESGF"></dl>
+</div></div>
+
+<!-- Mail -->
+<div class="veil" id="mMail" hidden><div class="modal white" role="dialog" aria-modal="true" aria-labelledby="hMail">
+  <button class="x" type="button" data-close aria-label="Fermer">×</button>
+  <h2 id="hMail" data-i="mail_t">Partager par e-mail</h2>
+  <p class="lead" data-i="mail_l">Ouvrez votre messagerie, ou copiez le lien de vérification pour le coller où vous voulez.</p>
+  <p><a class="ext" id="mailLink" href="#" data-i="mail_open">Ouvrir ma messagerie</a></p>
+  <div class="copyrow"><input id="copyUrl" readonly aria-label="Lien de vérification"><button type="button" id="copyBtn" data-i="copy">Copier</button></div>
+</div></div>
+
+<!-- Validate -->
+<div class="veil" id="mValidate" hidden><div class="modal white" role="dialog" aria-modal="true" aria-labelledby="hVal">
+  <button class="x" type="button" data-close aria-label="Fermer">×</button>
+  <h2 id="hVal" data-i="val_t">Validation en direct</h2>
+  <p class="lead" data-i="val_l">Ces contrôles tournent maintenant, dans votre navigateur, sur le fichier publié.</p>
+  <ul class="checks" id="checks"></ul>
+  <div class="drop" id="drop" data-real="1">
+    <span data-i="drop1">Vous avez reçu une copie de ce PDF ?</span>
+    <label for="file" data-i="drop2">Déposez-la ou choisissez-la ici</label>
+    <span data-i="drop3">pour vérifier qu'elle n'a pas été modifiée. Le fichier ne quitte pas votre appareil.</span>
+    <input type="file" id="file" accept="application/pdf,.pdf">
+    <div class="res" id="dropRes"></div>
+  </div>
+</div></div>
+
+<script>
+(function(){
+const T={
+ fr:{},
+ en:{hi:"Congratulations!",congrats:"You opened a duly certified Smart Certificate document issued by <b>ESGF</b>. Any change to the file is detectable and its owner's identity is attested.",owner_lbl:"Document's owner",owner_link:"View owner profile",issuer_tile:"Click here to learn more about ESGF.",vid_t:"How it works, in 16 seconds",vid_s:"Click to play the walkthrough",f0b:"The PDF is reduced to 64 characters",f1b:"The issuer seals the PDF with its key",f1s:"PAdES signature (ETSI EN 319 142) embedded in the file: any edit breaks it.",f2b:"The fingerprint is anchored in Bitcoin",f2s:"Through OpenTimestamps: a proof of date nobody, us included, can rewrite.",f3b:"Anyone re-checks it, no account needed",f3s:"QR code or link → this page recomputes the fingerprint and compares it.",secured:"This document is secured by <b>Smart Certificate</b>",see:"See how",loading:"Loading preview…",b1:"Download blockchain receipt",b2:"Validate blockchain reception",b3:"Download secure PDF",foot:"Document no.",foot2:"SHA-256 fingerprint",how_t:"What is Smart Certificate ?",how_l:"It is a document that certifies 3 fundamental things:",how1t:"Integrity",how1:"We guarantee that the document has not been modified since its creation. It contains a valid signature and an immutable footprint stored on the Bitcoin blockchain, providing a decentralized method to verify its integrity.",how2t:"Authenticity",how2:"We certify the identity of the issuer. This ensures that the organization and its members are legitimate and authorized to issue this document.",how3t:"Validity",how3:"We ensure the real-time validity of the document. Any change, such as an update, revocation, expiration, or validity extension, is instantly reflected on this page.",own_t:"Owner profile",own_l:"What the issuer checked about this person before issuing the document.",iss_t:"The issuer",iss_l:"ESGF.",mail_t:"Share by email",mail_l:"Open your mail app, or copy the verification link and paste it anywhere.",mail_open:"Open my mail app",copy:"Copy",val_t:"Live validation",val_l:"These checks are running now, in your browser, against the published file.",drop1:"Received a copy of this PDF?",drop2:"Drop it or pick it here",drop3:"to check it has not been modified. The file never leaves your device."}
+};
+document.querySelectorAll("[data-i]").forEach(el=>{T.fr[el.dataset.i]=el.innerHTML});
+const L={
+ c1:"Le fichier publié correspond à l'empreinte enregistrée",c1k:"Le fichier publié NE correspond PAS à l'empreinte enregistrée",c2:"Empreinte ancrée dans Bitcoin",c2w:"Empreinte soumise aux calendriers OpenTimestamps, confirmation Bitcoin en attente",c3:"Signature PAdES de l'émetteur présente",c3s:"Vérifiable hors ligne dans Adobe Acrobat ou avec pyHanko. Certificat émis par Smart Certificate.",c4:"Statut du document : non révoqué",same:"Identique à l'original. Ce fichier n'a pas été modifié.",diff:"Différent de l'original. Ce fichier a été modifié ou ce n'est pas le bon document.",calc:"Calcul de l'empreinte…",pdfmiss:"Le PDF n'est pas encore publié sur cette page.",saved:"Fichier proposé au téléchargement.",declined:"Téléchargement annulé.",nodl:"Le téléchargement n'est pas disponible ici. Ouvrez le fichier :",copied:"Lien copié.",open:"ouvrir",name:"Nom",idv:"Identité",idvv:"Vérifiée par l'émetteur à l'inscription (pièce d'identité + e-mail)",docs:"Documents détenus",sub:"Titre",leg:"Raison sociale",cert:"Certificat de signature",fp:"Empreinte du certificat (SHA-256)",ca:"Autorité",alg:"Algorithme",st:"Statut",stv:"Actif, autorisé à émettre",shtext:"Mon certificat vérifiable",hash:"Empreinte calculée",exp:"attendue"},
+ c1:"The published file matches the recorded fingerprint",c1k:"The published file does NOT match the recorded fingerprint",c2:"Fingerprint anchored in Bitcoin",c2w:"Fingerprint submitted to OpenTimestamps calendars, Bitcoin confirmation pending",c3:"Issuer's PAdES signature present",c3s:"Verifiable offline in Adobe Acrobat or with pyHanko.",c4:"Document status: not revoked",same:"Identical to the original. This file has not been modified.",diff:"Different from the original. This file was modified or is not the right document.",calc:"Computing fingerprint…",pdfmiss:"The PDF is not published on this page yet.",saved:"File offered for download.",declined:"Download cancelled.",nodl:"Downloads are not available here. Open the file:",copied:"Link copied.",open:"open",name:"Name",idv:"Identity",idvv:"Checked by the issuer at enrolment (ID document + email)",docs:"Documents held",sub:"Title",leg:"Legal name",cert:"Signing certificate",fp:"Certificate fingerprint (SHA-256)",ca:"Authority",alg:"Algorithm",st:"Status",stv:"Active, authorised to issue",shtext:"My verifiable certificate",hash:"Computed fingerprint",exp:"expected"}
+};
+let lang="fr";try{lang=localStorage.getItem("scelle_lang")||"fr"}catch(e){}
+let R=null,pdfBuf=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const t=k=>L[lang][k];
+
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i]").forEach(el=>{const v=T[lang][el.dataset.i];if(v!=null)el.innerHTML=v});
+  $("lang").textContent=lang==="fr"?"EN":"FR";
+  render();
+}
+$("lang").onclick=()=>{lang=lang==="fr"?"en":"fr";try{localStorage.setItem("scelle_lang",lang)}catch(e){}applyLang()};
+
+function toast(m){const d=document.createElement("div");d.className="toast";d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+
+function fmtDate(s){if(!s)return"—";const d=new Date(s);return isNaN(d)?s:d.toLocaleDateString(lang==="fr"?"fr-FR":"en-GB",{day:"2-digit",month:"long",year:"numeric"})}
+
+function render(){
+  if(!R)return;
+  $("ownerName").textContent=R.recipient.display_name;
+  if(R.preview){$("preview").src=R.preview;$("pImg").src=R.preview}
+  if(R.mockup){
+    $("congratsTxt").innerHTML=lang==="fr"
+      ?`Vous avez ouvert un document vérifiable émis par <b>${esc(R.issuer.short_name||R.issuer.name)}</b>. Il illustre ce que Smart Certificate garantira : intégrité du fichier et identité de son titulaire.`
+      :`You opened a  verifiable document issued by <b>${esc(R.issuer.short_name||R.issuer.name)}</b>. It shows what Smart Certificate will guarantee: file integrity and the owner's identity.`;
+    $("drop").hidden=true;
+  }
+  $("pName").textContent=R.recipient.display_name;
+  $("pIss").textContent=R.issuer.short_name||R.issuer.name;
+  $("pT").textContent=R.title;
+  $("pS").textContent=R.subtitle||R.document_id;
+  $("pSearch").placeholder=lang==="fr"?"Rechercher":"Search";
+  const iu=R.issuer.url;
+  $("issuerLink").hidden=!iu;$("issuerBtn").hidden=!!iu;
+  if(iu){$("issuerLink").href=iu;$("issuerLinkTxt").textContent=(lang==="fr"?(R.issuer.tile_text_fr||"Cliquez ici et découvrez plus d'informations à propos de "+(R.issuer.short_name||R.issuer.name)+"."):(R.issuer.tile_text_en||"Click here to learn more about "+(R.issuer.short_name||R.issuer.name)+"."))}
+  const m=R.media&&R.media.placeholder?null:R.media;
+  if(R.media&&R.media.placeholder){const v=$("video");v.classList.add("unavail");v.disabled=true;
+    v.querySelector(".inner").innerHTML=`<div class="yt"><span class="play"><svg width="9" height="10" viewBox="0 0 9 10"><path d="M0 0l9 5-9 5z" fill="#fff"/></svg></span>YouTube</div><h3>${lang==="fr"?"Vidéo non disponible":"Video unavailable"}</h3><small>${lang==="fr"?"Cette vidéo n'est pas disponible":"This video is not available"}</small>`}
+  $("mediaLink").hidden=!m;$("video").hidden=!!m;
+  if(m&&m.youtube_id&&!window.claude){ // own hosting: YouTube thumbnail + in-tile player, like the reference
+    $("mediaLink").style.background=`linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(https://i.ytimg.com/vi/${encodeURIComponent(m.youtube_id)}/hqdefault.jpg) center/cover`;
+    $("mediaLink").dataset.yt=m.youtube_id}
+  if(m){$("mediaLink").href=m.url;$("mediaSrc").textContent=m.source||"";$("mediaLabel").textContent=m.label;$("mediaHint").textContent=lang==="fr"?"Voir sur "+new URL(m.url).hostname:"Watch on "+new URL(m.url).hostname}
+  $("logoImg").onerror=()=>{$("logoImg").hidden=true;$("logoWord").hidden=false;$("logoWord").textContent=R.issuer.logo_alt||R.issuer.name};
+  if(R.issuer.logo){$("logoImg").src=R.issuer.logo;$("logoImg").alt=R.issuer.logo_alt||R.issuer.name;$("logoImg").hidden=false;$("logoWord").hidden=true}
+  else{$("logoImg").hidden=true;$("logoWord").hidden=false;$("logoWord").textContent=R.issuer.name}
+  $("fHash").textContent="SHA-256 "+R.sha256;
+  const anchored=R.ots&&R.ots.status==="confirmed";
+  $("status").innerHTML=R.mockup
+    ?`<span class="chip pend"><i></i>${lang==="fr"?"Maquette":"Mock-up"}</span><span>${t("issued")} <b>${fmtDate(R.issued_at)}</b></span><span>N° <b>${esc(R.document_id)}</b></span>`
+    :`<span class="chip"><i></i>${t("ok")}</span>`+
+    `<span>${t("issued")} <b>${fmtDate(R.issued_at)}</b></span>`+
+    `<span>${t("valid")} <b>${fmtDate(R.valid_until)}</b></span>`+
+    `<span>${t("anchor")} : `+(anchored?`<b>${t("blk")} ${esc(R.ots.bitcoin_block)}</b>`:`<span class="chip pend"><i></i>${t("pend")}</span>`)+`</span>`;
+  $("ownerKv").innerHTML=kv([[t("name"),R.recipient.display_name],[t("sub"),R.title],[t("idv"),t("idvv")],[t("docs"),"1"]]);
+  $("issuerKv").innerHTML=kv([[t("leg"),R.issuer.name],[t("cert"),R.issuer.signer_subject],[t("ca"),R.issuer.ca_subject],[t("alg"),R.issuer.algorithm],[t("fp"),`<span class="mono">${esc(R.issuer.cert_sha256)}</span>`,1],[t("st"),t("stv")]]);
+  const vu=R.verify_url||location.href.split("#")[0];
+  const u=encodeURIComponent(vu),txt=encodeURIComponent(t("shtext")+" : "+R.title);
+  $("shIn").href="https://www.linkedin.com/sharing/share-offsite/?url="+u;
+  $("shFb").href="https://www.facebook.com/sharer/sharer.php?u="+u;
+  $("shX").href="https://twitter.com/intent/tweet?url="+u+"&text="+txt;
+  $("shWa").href="https://wa.me/?text="+txt+"%20"+u;
+  $("mailLink").href="mailto:?subject="+txt+"&body="+txt+"%0A%0A"+u;
+  $("copyUrl").value=vu;
+}
+function kv(rows){return rows.map(([k,v,raw])=>`<dt>${esc(k)}</dt><dd>${raw?v:esc(v)}</dd>`).join("")}
+
+async function sha256Hex(buf){const h=await crypto.subtle.digest("SHA-256",buf);return[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("")}
+
+async function load(){
+  try{const r=await fetch("receipt.json",{cache:"no-store"});if(r.ok)R=await r.json()}catch(e){}
+  signalerVisite(); // before render: a display error must never block the notification
+  render();
+  const img=$("preview");
+  img.onload=()=>{img.hidden=false;$("ph").hidden=true};
+  img.onerror=()=>{$("ph").textContent=lang==="fr"?"Aperçu indisponible":"Preview unavailable"};
+  if(img.complete&&img.naturalWidth)img.onload();
+}
+async function getPdf(){
+  if(pdfBuf)return pdfBuf;
+  if(!R)return null;
+  const r=await fetch(R.pdf_file,{cache:"no-store"});if(!r.ok)return null;
+  pdfBuf=await r.arrayBuffer();return pdfBuf;
+}
+
+// modals
+let lastFocus=null;
+function openM(id){lastFocus=document.activeElement;const m=$(id);m.hidden=false;m.querySelector(".x").focus();if(id==="mValidate")runChecks()}
+function closeM(m){m.hidden=true;lastFocus&&lastFocus.focus()}
+document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openM(b.dataset.open)));
+document.querySelectorAll(".veil").forEach(v=>{v.addEventListener("click",e=>{if(e.target===v||e.target.closest("[data-close]"))closeM(v)})});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".veil:not([hidden])").forEach(closeM)});
+
+function li(state,title,sub){return`<li><span class="dot ${state}">${state==="ok"?"✓":state==="ko"?"!":state==="wait"?"…":""}</span><div>${title}${sub?`<small>${sub}</small>`:""}</div></li>`}
+async function runChecks(){
+  const ul=$("checks");
+  if(R&&R.mockup){const fr=lang==="fr";
+          +li("",fr?"Intégrité · empreinte SHA-256 du PDF":"Integrity · PDF SHA-256 fingerprint",fr?"Contrôlée dès l'émission réelle":"ESGF")
+      +li("",fr?"Authenticité · signature PAdES de l'émetteur":"Authenticity · issuer PAdES signature",fr?"Contrôlée dès l'émission réelle":"ESGF")
+      +li("",fr?"Date · ancrage Bitcoin (OpenTimestamps)":"Date · Bitcoin anchor (OpenTimestamps)",fr?"Contrôlée dès l'émission réelle":"Checked once really issued");
+    return}
+  if(!R){ul.innerHTML=li("ko",t("pdfmiss"));return}
+  ul.innerHTML=li("",t("calc"));
+  const buf=await getPdf();
+  let rows="";
+  if(!buf){rows+=li("ko",t("pdfmiss"))}
+  else{const h=await sha256Hex(buf);const ok=h===R.sha256;
+    rows+=li(ok?"ok":"ko",ok?t("c1"):t("c1k"),`${t("hash")} <span class="mono">${h}</span>${ok?"":` · ${t("exp")} <span class="mono">${R.sha256}</span>`}`)}
+  const o=R.ots||{};
+  
+  else{rows+=li("wait",t("c2w"),(o.calendars||[]).map(esc).join(" · "))}
+  rows+=li("ok",t("c3"),`${t("c3s")}${R.rfc3161?`<br>RFC 3161 · ${esc(R.rfc3161_tsa)}`:""}<br>${esc(R.issuer.signer_subject)} · <span class="mono">${esc((R.issuer.cert_sha256||"").slice(0,32))}…</span>`);
+  rows+=li(R.revoked?"ko":"ok",t("c4"));
+  ul.innerHTML=rows;
+}
+
+// drop zone
+const drop=$("drop");
+async function checkFile(f){
+  if(!f||!R)return;const res=$("dropRes");res.className="res";res.textContent=t("calc");
+  const h=await sha256Hex(await f.arrayBuffer());const ok=h===R.sha256;
+  res.className="res "+(ok?"ok":"ko");res.textContent=(ok?"✓ ":"✗ ")+(ok?t("same"):t("diff"));
+}
+$("file").addEventListener("change",e=>checkFile(e.target.files[0]));
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>checkFile(e.dataTransfer.files[0]));
+
+// downloads
+let dl=null;
+(async()=>{try{dl=window.claude?await window.claude.use("downloads"):null}catch(e){dl=null}})();
+async function offer(btn,filename,getData,fallbackHref){
+  btn.setAttribute("aria-busy","true");
+  try{
+    const data=await getData();
+    if(!data){toast(t("pdfmiss"));return}
+    if(!dl&&!window.claude){ // own hosting: a plain download link works
+      const a=document.createElement("a"),u=URL.createObjectURL(typeof data==="string"?new Blob([data],{type:"application/json"}):data);
+      a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return}
+    if(!dl){showFallback(fallbackHref);return}
+    await dl.save({filename,data});toast(t("saved"));
+  }catch(e){
+    if(e&&e.code==="declined")toast(t("declined"));else showFallback(fallbackHref);
+  }finally{btn.removeAttribute("aria-busy")}
+}
+function showFallback(href){
+  const d=document.createElement("div");d.className="toast";
+  d.innerHTML=`${esc(t("nodl"))} <a style="color:#9fb2ff" target="_blank" rel="noopener" href="${esc(href)}">${esc(t("open"))}</a>`;
+  document.body.appendChild(d);setTimeout(()=>d.remove(),6000);
+}
+$("btnPdf").onclick=e=>offer(e.currentTarget,R?R.pdf_file:"document.pdf",async()=>{const b=await getPdf();return b?new Blob([b],{type:"application/pdf"}):null},R?R.pdf_file:"#");
+$("btnReceipt").onclick=e=>offer(e.currentTarget,R?`recu-blockchain-${R.document_id}.json`:"receipt.json",async()=>R?JSON.stringify(R,null,2):null,"receipt.json");
+
+// copy
+$("copyBtn").onclick=async()=>{const i=$("copyUrl");try{await navigator.clipboard.writeText(i.value);toast(t("copied"))}catch(e){i.select()}};
+
+// video walkthrough
+const vid=$("video");let timer=null;
+vid.addEventListener("click",()=>{
+  clearInterval(timer);vid.classList.remove("playing");void vid.offsetWidth;vid.classList.add("playing");
+  const fr=[...vid.querySelectorAll(".frame")];let i=0;
+  const show=()=>fr.forEach((f,k)=>f.classList.toggle("on",k===i));show();
+  timer=setInterval(()=>{i++;if(i>=fr.length){clearInterval(timer);setTimeout(()=>vid.classList.remove("playing"),600);return}show()},4000);
+});
+
+// in-tile YouTube player (own hosting only; the artifact frame cannot embed other sites)
+$("mediaLink").addEventListener("click",e=>{
+  const id=e.currentTarget.dataset.yt;if(!id)return;e.preventDefault();
+  const f=document.createElement("iframe");
+  f.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id)+"?autoplay=1&rel=0";
+  f.title=R&&R.media?R.media.label:"Vidéo";f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.allowFullscreen=true;
+  f.style.cssText="position:absolute;inset:0;width:100%;height:100%;border:0";
+  const box=document.createElement("div");box.className="card video";box.appendChild(f);e.currentTarget.replaceWith(box);
+});
+// visit notification: one beacon per browser session to the Cloudflare function (functions/api/visite.js)
+function signalerVisite(){
+  if(window.claude)return; // claude.ai frame: no server behind the page
+  try{if(localStorage.getItem("scelle_notif_off")==="1")return}catch(e){}
+  try{if(sessionStorage.getItem("scelle_visite"))return;sessionStorage.setItem("scelle_visite","1")}catch(e){}
+  let ref="";try{const h=document.referrer?new URL(document.referrer).hostname:"";ref=h&&h!==location.hostname?h:""}catch(e){}
+  const data=JSON.stringify({vue:location.hash==="#profil"?"profil":"document",src:new URLSearchParams(location.search).get("src")||"",
+    ref,lang:navigator.language||"",ecran:screen.width+"x"+screen.height,doc:R?R.document_id:""});
+  try{
+    if(navigator.sendBeacon&&navigator.sendBeacon("api/visite",new Blob([data],{type:"application/json"})))return;
+    fetch("api/visite",{method:"POST",headers:{"content-type":"application/json"},body:data,keepalive:true}).catch(()=>{});
+  }catch(e){}
+}
+// #moi : stop notifications for the owner's own visits on this device ; #notif-on : turn them back on
+function notifSwitch(){
+  const h=location.hash;if(h!=="#moi"&&h!=="#notif-on")return;
+  try{localStorage.setItem("scelle_notif_off",h==="#moi"?"1":"0")}catch(e){}
+  toast(h==="#moi"?(lang==="fr"?"Vos visites sur cet appareil ne seront plus notifiées.":"Your visits from this device will no longer be notified.")
+                 :(lang==="fr"?"Notifications réactivées sur cet appareil.":"Notifications turned back on for this device."));
+  history.replaceState(null,"",location.pathname+location.search+"#document");
+}
+// views: #profil shows the owner's profile, anything else the document
+function route(){
+  notifSwitch();const p=location.hash==="#profil";$("profil").hidden=!p;document.querySelector("main.wrap").hidden=p;window.scrollTo(0,0)}
+addEventListener("hashchange",route);
+$("pSearch").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase();document.querySelectorAll(".p-card").forEach(c=>{c.hidden=!!q&&!c.textContent.toLowerCase().includes(q)})});
+applyLang();load();route();
+})();
+</script>
+
+</body></html>
