@@ -168,6 +168,15 @@ a.vlink{text-decoration:none;display:block}
 /* Functional additions are scoped to the document and blockchain dialog. */
 .document-source{margin:10px 0 0;font-size:12px}
 .preview-link{display:block}
+.preview-zoom{position:relative;cursor:zoom-in}
+.preview-viewport{display:block;overflow:hidden}
+.preview-viewport img{transform:scale(1);transform-origin:50.03% 50%;transition:transform .32s cubic-bezier(.2,.65,.3,1)}
+.preview-magnifier,.p-card .mag{position:absolute;right:6px;bottom:6px;display:grid;place-items:center;width:22px;height:22px;border:1px solid rgba(199,204,214,.7);border-radius:50%;background:rgba(255,255,255,.96);color:#333;box-shadow:0 1px 3px rgba(27,35,51,.12);pointer-events:none}
+.p-card .mag{right:10px;bottom:6px;width:18px;height:18px}
+.preview-magnifier svg{width:12px;height:12px}
+/* 10% keeps the inner certificate border inside both the document and profile frames. */
+@media (hover:hover) and (pointer:fine){.preview-zoom:hover .preview-viewport img{transform:scale(1.10)}}
+.preview-link:focus-visible .preview-viewport img,.p-card:focus-visible .preview-viewport img{transform:scale(1.10)}
 .sheet .ph{padding:20px;text-align:center}
 .profile-back{margin-top:18px}
 .profile-placeholder{display:grid;place-items:center;aspect-ratio:1.414/1;background:var(--panel);font-size:13px;color:var(--ink-soft)}
@@ -255,7 +264,7 @@ a.vlink{text-decoration:none;display:block}
 
     <div class="stage">
       <figure class="sheet" style="margin:0">
-        <a class="preview-link" id="previewLink" href="Anouar_AMRI_Expert(e)_en_Ingénierie_Financière_EIF_-_JUINS2021.pdf" target="_blank" rel="noopener"><img id="preview" alt="Aperçu du certificat" hidden></a>
+        <a class="preview-link preview-zoom" id="previewLink" href="Anouar_AMRI_Expert(e)_en_Ingénierie_Financière_EIF_-_JUINS2021.pdf" target="_blank" rel="noopener"><span class="preview-viewport"><img id="preview" alt="Aperçu du certificat" hidden></span><span class="preview-magnifier" id="previewMag" aria-hidden="true" hidden><svg viewBox="0 0 12 12"><circle cx="5" cy="5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="m8 8 3 3" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span></a>
         <div class="ph" id="ph" role="status"><span id="previewMessage" data-i="loading">Chargement de l'aperçu…</span></div>
         <p class="document-source"><a class="ext" id="sourcePdf" href="Anouar_AMRI_Expert(e)_en_Ingénierie_Financière_EIF_-_JUINS2021.pdf" target="_blank" rel="noopener" data-i="source_pdf">Ouvrir le PDF source</a></p>
       </figure>
@@ -287,7 +296,7 @@ a.vlink{text-decoration:none;display:block}
   <input class="p-search" id="pSearch" type="search" placeholder="Search" aria-label="Search">
   <div class="p-grid" id="pGrid">
     <a class="p-card" href="#document" id="pCard">
-      <div class="th"><img id="pImg" alt="" hidden><span class="profile-placeholder" id="pPlaceholder" data-i="preview_unavailable">Aperçu indisponible</span><span class="mag"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="5" cy="5" r="3.8" fill="none" stroke="#333" stroke-width="1.2"/><path d="M8 8l3 3" stroke="#333" stroke-width="1.2"/></svg></span></div>
+      <div class="th preview-zoom"><span class="preview-viewport"><img id="pImg" alt="" hidden></span><span class="profile-placeholder" id="pPlaceholder" data-i="preview_unavailable">Aperçu indisponible</span><span class="mag" id="profileMag" aria-hidden="true" hidden><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="5" cy="5" r="3.8" fill="none" stroke="#333" stroke-width="1.2"/><path d="M8 8l3 3" stroke="#333" stroke-width="1.2"/></svg></span></div>
       <div class="p-meta"><div class="p-iss" id="pIss"></div><div class="p-t" id="pT"></div><div class="p-s" id="pS"></div></div>
     </a>
   </div>

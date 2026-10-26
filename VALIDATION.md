@@ -2,6 +2,22 @@
 
 Le site statique se trouve dans `deploy/`. La publication finale a été explicitement autorisée par l’utilisateur. La publication Cloudflare n’est pas encore confirmée : l’authentification et l’accès réseau du compte existant restent à activer dans cet environnement. Le projet Cloudflare Pages correspondant à l’adresse fournie est `smartcertificate` ; la page publique est `https://smartcertificate.pages.dev/`.
 
+## Aperçus et loupe sur les deux pages
+
+Le même fichier `deploy/preview-diplome.png`, rendu depuis le PDF original, alimente l’aperçu principal et la vignette du profil. Une petite loupe est superposée en bas à droite de chaque image.
+
+Le survol avec une souris agrandit l’image de 10 %, avec une transition de 320 ms et un centre fixe aligné sur le cadre intérieur. Le zoom est contenu dans une fenêtre dédiée à l’image : les cartes, boutons et textes autour restent à leur place, et l’icône de loupe reste fixe. Le départ de la souris ramène progressivement l’image à sa taille initiale. Le clavier obtient le même agrandissement au focus ; la préférence de réduction des animations est respectée.
+
+L’image mesure 1600 × 1154 pixels ; son cadre intérieur occupe approximativement `[88, 88, 1513, 1066]`. L’origine retenue est `50.03% 50%`. L’échelle commune de 1.10 conserve le cadre, les textes et les signatures sur les deux vues ; 1.15 couperait le cadre dans la vignette. Les repères et marges extérieures au cadre peuvent être recadrés par l’effet, sans modifier le PDF ni le PNG.
+
+Sur écran tactile, les liens natifs conservent leur comportement : l’aperçu principal ouvre le PDF et la vignette du profil revient au document. Aucun survol artificiel permanent n’est ajouté. Les loupes sont masquées si l’aperçu ne se charge pas.
+
+Les étapes Windows, les chemins corrects, le stockage GitHub/local et les modifications futures sont décrits dans `PUBLICATION.md`.
+
+Validation ciblée du zoom : 16 scénarios réussis, comprenant huit cas de survol (document/profil, FR/EN, largeurs 1440 et 390 px), deux cas clavier, deux cas tactiles émulés, deux cas d’image manquante et deux cas avec réduction des animations. Les mesures montrent une échelle intermédiaire pendant la transition, puis 1.10, et un retour à 1.00. Le cadre intérieur reste intégralement visible ; la marge minimale mesurée est d’environ 2,51 px sur la vignette du profil. Les positions des cartes, métadonnées et loupes restent identiques pendant le zoom.
+
+Les liens de navigation PDF ont été contrôlés avec une réponse locale dédiée à la navigation afin d’éviter les particularités du lecteur PDF intégré de Chromium. Les contrôles de chargement et d’empreinte du vrai PDF sont restés actifs. Les 44 textes et les traductions sont inchangés ; le PDF, le PNG d’aperçu, le reçu et le logo sont identiques octet par octet à la version précédente. Rapports et captures : `/workspace/review/deploy-validation/preview-zoom/`.
+
 ## Modale conforme à la référence fournie
 
 Le bouton « Valider la réception blockchain » ouvre un panneau bleu contenant uniquement :

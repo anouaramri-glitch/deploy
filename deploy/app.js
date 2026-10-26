@@ -222,10 +222,10 @@
   function preparePreview() {
     $("sourcePdf").href = $("previewLink").href = pdfUrl();
     const image = $("preview"), thumb = $("pImg");
-    image.onload = () => { image.hidden = false; $("ph").hidden = true; };
-    image.onerror = () => { previewFailed = true; image.hidden = true; $("ph").hidden = false; render(); };
-    thumb.onload = () => { thumb.hidden = false; $("pPlaceholder").hidden = true; };
-    thumb.onerror = () => { thumb.hidden = true; $("pPlaceholder").hidden = false; };
+    image.onload = () => { image.hidden = false; $("ph").hidden = true; $("previewMag").hidden = false; };
+    image.onerror = () => { previewFailed = true; image.hidden = true; $("ph").hidden = false; $("previewMag").hidden = true; render(); };
+    thumb.onload = () => { thumb.hidden = false; $("pPlaceholder").hidden = true; $("profileMag").hidden = false; };
+    thumb.onerror = () => { thumb.hidden = true; $("pPlaceholder").hidden = false; $("profileMag").hidden = true; };
     image.src = thumb.src = assetUrl(receipt?.preview || "preview-diplome.png");
   }
   function prepareLogo() {
