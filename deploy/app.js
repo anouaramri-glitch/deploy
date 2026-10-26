@@ -72,20 +72,11 @@
 
   const L = {
     fr: {
-      issued: "Date inscrite sur le document :", number: "N°",
-      initial: "Contrôle du reçu en cours", mismatch: "Empreinte différente du reçu",
-      matched: "Empreinte conforme au reçu", unavailable: "Vérification indisponible",
-      unconfirmed: "Preuve non confirmée",
-      mismatchDetail: "L'empreinte du PDF publié diffère de celle du reçu. Ce reçu ne permet pas de confirmer l'ancrage de ce fichier. Aucun horodatage blockchain n'est vérifié.",
-      unconfirmedDetail: "Aucune confirmation Bitcoin n'a été vérifiée pour ce PDF. Le reçu seul ne suffit pas et aucun horodatage blockchain n'est confirmé.",
-      unavailableDetail: "Les données nécessaires n'ont pas pu être contrôlées. Aucune validation blockchain n'est annoncée.",
       calc: "Calcul de l'empreinte…", hash: "Empreinte calculée", expected: "Empreinte du reçu",
       c1: "Le PDF correspond à l'empreinte du reçu", c1bad: "Le PDF ne correspond pas à l'empreinte du reçu",
       c1missing: "Comparaison avec le reçu indisponible",
       merkle: "Preuve Merkle cohérente à l'intérieur du reçu", merkleBad: "Preuve Merkle invalide ou absente",
       merkleDetail: "Ce contrôle interne ne confirme ni le lien avec le PDF publié, ni un ancrage Bitcoin.",
-      anchor: "Ancrage Bitcoin non vérifié pour ce PDF",
-      anchorDetail: "Aucune preuve de bloc ni confirmation indépendante de transaction n'est disponible ici.",
       signature: "Signature et identité de l'émetteur non vérifiées",
       signatureDetail: "Cette page ne valide pas les signatures numériques de l'émetteur.",
       revocation: "Révocation non vérifiée", revocationDetail: "Aucun service de révocation n'est configuré.",
@@ -103,19 +94,11 @@
       mail: "Partager par e-mail", copyLabel: "Lien de vérification", shareText: "Mon certificat vérifiable : "
     },
     en: {
-      issued: "Date shown on the document:", number: "No.",
-      initial: "Checking receipt", mismatch: "Fingerprint differs from receipt",
-      matched: "Fingerprint matches receipt", unavailable: "Verification unavailable", unconfirmed: "Proof unconfirmed",
-      mismatchDetail: "The published PDF's fingerprint differs from the receipt. This receipt cannot confirm that this file is anchored. No blockchain timestamp has been verified.",
-      unconfirmedDetail: "No Bitcoin confirmation has been verified for this PDF. The receipt alone is insufficient, and no blockchain timestamp is confirmed.",
-      unavailableDetail: "The required data could not be checked. No successful blockchain validation is claimed.",
       calc: "Computing fingerprint…", hash: "Computed fingerprint", expected: "Receipt fingerprint",
       c1: "The PDF matches the receipt's fingerprint", c1bad: "The PDF does not match the receipt's fingerprint",
       c1missing: "Comparison with the receipt is unavailable",
       merkle: "The receipt's internal Merkle proof is consistent", merkleBad: "Invalid or missing Merkle proof",
       merkleDetail: "This internal check confirms neither a link to the published PDF nor a Bitcoin anchor.",
-      anchor: "Bitcoin anchoring has not been verified for this PDF",
-      anchorDetail: "No block proof or independent transaction confirmation is available here.",
       signature: "Issuer signature and identity not verified",
       signatureDetail: "This page does not validate the issuer's digital signatures.",
       revocation: "Revocation not verified", revocationDetail: "No revocation service is configured.",
@@ -179,12 +162,6 @@
       [t("issuer"), documentInfo.issuer], [t("identity"), t("unverified")],
       [t("signedIdentity"), receipt?.signature?.signedIdentity || "—"], [t("website"), t("websiteMissing")]
     ]);
-    const date = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-GB", {
-      day: "2-digit", month: "long", year: "numeric", timeZone: "UTC"
-    }).format(new Date(documentInfo.issuedAt + "T00:00:00Z"));
-    const state = configFailed || result?.error || (result && !result.canCompare) ? "unavailable" : result ? (result.matches ? "matched" : "mismatch") : "initial";
-    $("status").innerHTML = `<span class="${state === "matched" ? "chip" : "chip pend"}"><i></i>${esc(t(state))}</span>` +
-      `<span>${esc(t("issued"))} <b>${esc(date)}</b></span><span>${esc(t("number"))} <b>${esc(documentInfo.number)}</b></span>`;
     $("fHash").textContent = result?.pdfHash ? "SHA-256 " + result.pdfHash : t("calc");
     $("previewMessage").textContent = previewFailed ? T[lang].preview_unavailable : T[lang].loading;
     filterProfile();
@@ -227,6 +204,8 @@
     thumb.onload = () => { thumb.hidden = false; $("pPlaceholder").hidden = true; $("profileMag").hidden = false; };
     thumb.onerror = () => { thumb.hidden = true; $("pPlaceholder").hidden = false; $("profileMag").hidden = true; };
     image.src = thumb.src = assetUrl(receipt?.preview || "preview-diplome.png");
+    if (image.complete) (image.naturalWidth ? image.onload : image.onerror)();
+    if (thumb.complete) (thumb.naturalWidth ? thumb.onload : thumb.onerror)();
   }
   function prepareLogo() {
     const image = $("logoImg"), fallback = $("logoWord");
@@ -389,5 +368,5 @@
   }
   $("pSearch").addEventListener("input", filterProfile);
   addEventListener("hashchange", route);
-  prepareLogo(); applyLang(); route(); void load();
+  prepareLogo(); preparePreview(); applyLang(); route(); void load();
 })();

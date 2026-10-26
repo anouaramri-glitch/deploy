@@ -110,6 +110,7 @@ button{font:inherit;cursor:pointer}
 a.issuer{text-decoration:none}
 a.vlink{text-decoration:none;display:block}
 .logocard{background:#fff;min-height:172px;display:grid;place-items:center;padding:24px;margin-top:0}
+.site-footer{max-width:802px;margin:8px auto 0}.qr-card{min-height:172px;padding:16px;background:#fff;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}.qr-card img{display:block}.qr-card .ext{font-size:13px;overflow-wrap:anywhere}
 .logocard img{max-width:130px;max-height:96px;width:auto;height:auto}
 .logoword{font-weight:500;color:#5b6578;font-size:15px;letter-spacing:.02em;text-align:center}
 /* owner profile view, mirrors the reference profile page */
@@ -264,8 +265,8 @@ a.vlink{text-decoration:none;display:block}
 
     <div class="stage">
       <figure class="sheet" style="margin:0">
-        <a class="preview-link preview-zoom" id="previewLink" href="Anouar_AMRI_Expert(e)_en_Ingénierie_Financière_EIF_-_JUINS2021.pdf" target="_blank" rel="noopener"><span class="preview-viewport"><img id="preview" alt="Aperçu du certificat" hidden></span><span class="preview-magnifier" id="previewMag" aria-hidden="true" hidden><svg viewBox="0 0 12 12"><circle cx="5" cy="5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="m8 8 3 3" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span></a>
-        <div class="ph" id="ph" role="status"><span id="previewMessage" data-i="loading">Chargement de l'aperçu…</span></div>
+        <a class="preview-link preview-zoom" id="previewLink" href="Anouar_AMRI_Expert(e)_en_Ingénierie_Financière_EIF_-_JUINS2021.pdf" target="_blank" rel="noopener"><span class="preview-viewport"><img id="preview" src="preview-diplome.png" alt="Aperçu du certificat"></span><span class="preview-magnifier" id="previewMag" aria-hidden="true" hidden><svg viewBox="0 0 12 12"><circle cx="5" cy="5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="m8 8 3 3" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span></a>
+        <div class="ph" id="ph" role="status" hidden><span id="previewMessage" data-i="loading">Chargement de l'aperçu…</span></div>
         <p class="document-source"><a class="ext" id="sourcePdf" href="Anouar_AMRI_Expert(e)_en_Ingénierie_Financière_EIF_-_JUINS2021.pdf" target="_blank" rel="noopener" data-i="source_pdf">Ouvrir le PDF source</a></p>
       </figure>
       <nav class="share" aria-label="Partager">
@@ -276,7 +277,6 @@ a.vlink{text-decoration:none;display:block}
         <button class="s-ml" type="button" data-open="mMail" aria-label="Partager par e-mail"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3zm2 2v.3l7 4.6 7-4.6V7zm14 2.7-7 4.6-7-4.6V17h14z"/></svg></button>
       </nav>
     </div>
-    <div class="status" id="status"></div>
 
     <div class="actions">
       <button class="act" type="button" id="btnReceipt"><span data-i="b1">Télécharger le reçu d’intégrité</span><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4v14.4H6z"/><path d="M14 2.8v4h4M9 12h6M9 15h6M9 18h4"/></svg></button>
@@ -284,7 +284,7 @@ a.vlink{text-decoration:none;display:block}
       <button class="act" type="button" id="btnPdf"><span data-i="b3">Télécharger le PDF sécurisé</span><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4v14.4H6z"/><rect x="9" y="12.5" width="6" height="5" rx=".8"/><path d="M10.2 12.5v-1.3a1.8 1.8 0 0 1 3.6 0v1.3"/></svg></button>
     </div>
   </section>
-  <div class="row"><div class="card logocard"><img id="logoImg" src="galileo.png" alt="Galileo Global Education"><span id="logoWord" class="logoword" hidden>Galileo Global Education</span></div></div>
+
 </main>
 
 <section class="profile" id="profil" hidden aria-labelledby="pName">
@@ -296,11 +296,16 @@ a.vlink{text-decoration:none;display:block}
   <input class="p-search" id="pSearch" type="search" placeholder="Search" aria-label="Search">
   <div class="p-grid" id="pGrid">
     <a class="p-card" href="#document" id="pCard">
-      <div class="th preview-zoom"><span class="preview-viewport"><img id="pImg" alt="" hidden></span><span class="profile-placeholder" id="pPlaceholder" data-i="preview_unavailable">Aperçu indisponible</span><span class="mag" id="profileMag" aria-hidden="true" hidden><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="5" cy="5" r="3.8" fill="none" stroke="#333" stroke-width="1.2"/><path d="M8 8l3 3" stroke="#333" stroke-width="1.2"/></svg></span></div>
+      <div class="th preview-zoom"><span class="preview-viewport"><img id="pImg" src="preview-diplome.png" alt=""></span><span class="profile-placeholder" id="pPlaceholder" hidden data-i="preview_unavailable">Aperçu indisponible</span><span class="mag" id="profileMag" aria-hidden="true" hidden><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="5" cy="5" r="3.8" fill="none" stroke="#333" stroke-width="1.2"/><path d="M8 8l3 3" stroke="#333" stroke-width="1.2"/></svg></span></div>
       <div class="p-meta"><div class="p-iss" id="pIss"></div><div class="p-t" id="pT"></div><div class="p-s" id="pS"></div></div>
     </a>
   </div>
 </section>
+
+<footer class="site-footer row">
+  <div class="card logocard"><img id="logoImg" src="galileo.png" alt="Galileo Global Education"><span id="logoWord" class="logoword" hidden>Galileo Global Education</span></div>
+  <div class="card qr-card"><a href="https://smartcertificate.pages.dev/" target="_blank" rel="noopener"><img src="qr-smartcertificate.svg" width="112" height="112" alt="QR code : Smart Certificate"></a><a class="ext" href="https://smartcertificate.pages.dev/" target="_blank" rel="noopener">https://smartcertificate.pages.dev/</a></div>
+</footer>
 
 <!-- See how -->
 <div class="veil" id="mHow" hidden><div class="modal blue" role="dialog" aria-modal="true" aria-labelledby="hHow">

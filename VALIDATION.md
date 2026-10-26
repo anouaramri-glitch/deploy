@@ -107,3 +107,8 @@ Les exigences manquantes ont été enregistrées dans le brouillon de l’enviro
 Les domaines nécessaires sont aussi enregistrés : `api.cloudflare.com`, `api.github.com`, `smartcertificate.pages.dev` et `main.smartcertificate.pages.dev`. Le réseau actif renvoie actuellement 403 pour ces destinations. Enregistrer le brouillon ne fournit pas les valeurs et ne les applique pas à la machine ; il faut les renseigner/enregistrer dans les paramètres et activer la configuration. La publication de l’environnement cloud reste distincte du déploiement du site sur Cloudflare Pages.
 
 L’environnement cloud n’a pas accès au disque Windows. Les fichiers ont été remplacés dans `/workspace/deploy/deploy` ; l’archive permet leur transfert vers `C:\Users\anoue\Documents\cowboy\deploy`. Aucune écriture sur le poste Windows n’est revendiquée.
+
+
+## Dernière correction et branche confirmée
+
+La barre d’informations sous le document a été supprimée intégralement, ainsi que son rendu JavaScript. Les deux aperçus ont une source PNG statique et sont initialisés avant le chargement du reçu. Le pied de page commun aux deux vues contient Galileo à gauche et le QR code avec le lien public à droite. Tests HTTP Chromium desktop/mobile et reçu indisponible réussis. La modale conserve le rendu de référence. La branche de production confirmée par l’API est `smartcertificate` ; `main` est un aperçu distinct.

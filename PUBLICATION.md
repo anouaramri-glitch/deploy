@@ -68,7 +68,7 @@ Cette session cloud ne dispose pas actuellement des accès Cloudflare et réseau
 ## 3. Publier sur le projet existant
 
 Dans Cloudflare → **Workers & Pages** → **smartcertificate**, consultez les paramètres de déploiement et confirmez la **branche de production** (`production_branch`).
-Cette branche n'a pas été confirmée dans votre compte. Saisissez son nom réel lorsque PowerShell le demande :
+La branche de production confirmée par l’API Cloudflare est `smartcertificate`. La branche `main` dispose d’un aperçu distinct. Saisissez `smartcertificate` lorsque PowerShell le demande :
 
 ```powershell
 $ProductionBranch = Read-Host "Branche de production confirmée dans Cloudflare"
