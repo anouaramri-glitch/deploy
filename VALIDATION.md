@@ -1,6 +1,6 @@
 # Validation du site corrigé
 
-Le site statique se trouve dans `deploy/`. La publication finale a été explicitement autorisée par l’utilisateur. La publication Cloudflare n’est pas encore confirmée : l’authentification et l’accès réseau du compte existant restent à activer dans cet environnement. Le projet Cloudflare Pages correspondant à l’adresse fournie est `smartcertificate` ; la page publique est `https://smartcertificate.pages.dev/`.
+Le site statique se trouve dans `deploy/`. La publication finale a été explicitement autorisée par l’utilisateur. La production et l’aperçu main ont été publiés avec succès ; les ressources ont été vérifiées en HTTP 200 et comparées octet par octet aux fichiers locaux. Le projet Cloudflare Pages correspondant à l’adresse fournie est `smartcertificate` ; la page publique est `https://smartcertificate.pages.dev/`.
 
 ## Aperçus et loupe sur les deux pages
 
@@ -112,3 +112,8 @@ L’environnement cloud n’a pas accès au disque Windows. Les fichiers ont ét
 ## Dernière correction et branche confirmée
 
 La barre d’informations sous le document a été supprimée intégralement, ainsi que son rendu JavaScript. Les deux aperçus ont une source PNG statique et sont initialisés avant le chargement du reçu. Le pied de page commun aux deux vues contient Galileo à gauche et le QR code avec le lien public à droite. Tests HTTP Chromium desktop/mobile et reçu indisponible réussis. La modale conserve le rendu de référence. La branche de production confirmée par l’API est `smartcertificate` ; `main` est un aperçu distinct.
+
+
+## Publication confirmée
+
+Production : déploiement `32d4475d-b2f4-4073-b677-505917b7c4a0`, branche `smartcertificate`. Aperçu main : `a96d026b-24db-4570-a82f-84c1f0d4efbe`. Les deux étapes Cloudflare deploy sont success. Les six ressources principales (JavaScript, aperçu PNG, logo Galileo, QR SVG, reçu JSON et PDF) sont en HTTP 200 et identiques aux sources sur les deux adresses. Un User-Agent de navigateur a été nécessaire pour le contrôle HTTP ; le client Python par défaut reçoit une protection 1010. Le jeton est actif ; l’identifiant de compte corrigé a permis la publication. Les paragraphes antérieurs décrivant des accès manquants relatent l’état précédent et ne bloquent plus cette publication.
