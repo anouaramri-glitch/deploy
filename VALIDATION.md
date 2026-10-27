@@ -117,3 +117,8 @@ La barre d’informations sous le document a été supprimée intégralement, ai
 ## Publication confirmée
 
 Production : déploiement `32d4475d-b2f4-4073-b677-505917b7c4a0`, branche `smartcertificate`. Aperçu main : `a96d026b-24db-4570-a82f-84c1f0d4efbe`. Les deux étapes Cloudflare deploy sont success. Les six ressources principales (JavaScript, aperçu PNG, logo Galileo, QR SVG, reçu JSON et PDF) sont en HTTP 200 et identiques aux sources sur les deux adresses. Un User-Agent de navigateur a été nécessaire pour le contrôle HTTP ; le client Python par défaut reçoit une protection 1010. Le jeton est actif ; l’identifiant de compte corrigé a permis la publication. Les paragraphes antérieurs décrivant des accès manquants relatent l’état précédent et ne bloquent plus cette publication.
+
+
+## Pied de page et vidéo
+
+QR et lien associé supprimés de la page et des ressources déployables. Galileo réintégré dans la page principale uniquement. La tuile vidéo conserve son affichage et ouvre uniquement une URL externe configurée dans receipt.video_url ; sans URL réelle, un message signale sa configuration manquante. Aucun lecteur ou aperçu vidéo intégré ni animation au clic. Tests desktop/mobile réussis, y compris ouverture simulée avec une URL de test non enregistrée dans la configuration publiée.

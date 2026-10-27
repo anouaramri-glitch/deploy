@@ -99,3 +99,5 @@ La commande de push suppose que vous travaillez sur la branche Git `main` ; vér
 Avec le parcours manuel décrit ici, relancez ensuite la commande Wrangler de publication et contrôlez l'adresse principale.
 Un push GitHub déclenche une publication automatique uniquement si l'intégration Git de Cloudflare est déjà configurée.
 Pour ce site statique, cette intégration doit utiliser la bonne racine du dépôt, le dossier de sortie `deploy` et une commande de build vide. Vérifiez ces paramètres avant de vous fier à un déploiement automatique.
+
+Le QR et son lien ne sont pas affichés sur le site. Le logo Galileo figure uniquement sur la page principale. La tuile vidéo garde son apparence et ouvre `video_url` de `deploy/receipt.json` dans un nouvel onglet, sans lecteur intégré ; cette URL reste à renseigner.

@@ -110,7 +110,6 @@ button{font:inherit;cursor:pointer}
 a.issuer{text-decoration:none}
 a.vlink{text-decoration:none;display:block}
 .logocard{background:#fff;min-height:172px;display:grid;place-items:center;padding:24px;margin-top:0}
-.site-footer{max-width:802px;margin:8px auto 0}.qr-card{min-height:172px;padding:16px;background:#fff;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}.qr-card img{display:block}.qr-card .ext{font-size:13px;overflow-wrap:anywhere}
 .logocard img{max-width:130px;max-height:96px;width:auto;height:auto}
 .logoword{font-weight:500;color:#5b6578;font-size:15px;letter-spacing:.02em;text-align:center}
 /* owner profile view, mirrors the reference profile page */
@@ -285,6 +284,7 @@ a.vlink{text-decoration:none;display:block}
     </div>
   </section>
 
+  <footer class="row"><div class="card logocard"><img id="logoImg" src="galileo.png" alt="Galileo Global Education"><span id="logoWord" class="logoword" hidden>Galileo Global Education</span></div></footer>
 </main>
 
 <section class="profile" id="profil" hidden aria-labelledby="pName">
@@ -302,10 +302,7 @@ a.vlink{text-decoration:none;display:block}
   </div>
 </section>
 
-<footer class="site-footer row">
-  <div class="card logocard"><img id="logoImg" src="galileo.png" alt="Galileo Global Education"><span id="logoWord" class="logoword" hidden>Galileo Global Education</span></div>
-  <div class="card qr-card"><a href="https://smartcertificate.pages.dev/" target="_blank" rel="noopener"><img src="qr-smartcertificate.svg" width="112" height="112" alt="QR code : Smart Certificate"></a><a class="ext" href="https://smartcertificate.pages.dev/" target="_blank" rel="noopener">https://smartcertificate.pages.dev/</a></div>
-</footer>
+
 
 <!-- See how -->
 <div class="veil" id="mHow" hidden><div class="modal blue" role="dialog" aria-modal="true" aria-labelledby="hHow">

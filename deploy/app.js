@@ -340,21 +340,15 @@
     catch { $("copyUrl").focus(); $("copyUrl").select(); toast(t("copyFallback")); }
   });
 
-  // Preserve the existing local slideshow; it is an explanation, not a validation result.
-  let videoTimer = null, videoEndTimer = null;
+  // Keep the tile unchanged: open only the configured external video, with no embedded player.
   $("video").addEventListener("click", () => {
-    clearInterval(videoTimer); clearTimeout(videoEndTimer);
-    const video = $("video"), frames = [...video.querySelectorAll(".frame")];
-    video.classList.remove("playing"); void video.offsetWidth; video.classList.add("playing");
-    let index = 0;
-    const show = () => frames.forEach((frame, position) => frame.classList.toggle("on", position === index));
-    show(); videoTimer = setInterval(() => {
-      index += 1;
-      if (index >= frames.length) {
-        clearInterval(videoTimer); videoEndTimer = setTimeout(() => video.classList.remove("playing"), 600); return;
-      }
-      show();
-    }, 4000);
+    const source = receipt?.video_url;
+    if (!source) { toast(lang === "fr" ? "Le lien de la vidéo n’est pas encore configuré." : "The video link has not been configured yet."); return; }
+    try {
+      const url = new URL(source);
+      if (!["https:", "http:"].includes(url.protocol)) throw new Error("Invalid video URL");
+      window.open(url.href, "_blank", "noopener,noreferrer");
+    } catch { toast(lang === "fr" ? "Le lien de la vidéo est invalide." : "The video link is invalid."); }
   });
   function filterProfile() {
     const query = $("pSearch").value.trim().toLocaleLowerCase(lang);

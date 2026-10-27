@@ -7,5 +7,6 @@
   "preview": "preview-diplome.png",
   "verification_scope": "published-file-integrity-only",
   "bitcoin_anchor": "not_verified",
-  "issuer_signature": "not_verified"
+  "issuer_signature": "not_verified",
+  "video_url": null
 }
