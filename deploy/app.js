@@ -203,7 +203,7 @@
     image.onerror = () => { previewFailed = true; image.hidden = true; $("ph").hidden = false; $("previewMag").hidden = true; render(); };
     thumb.onload = () => { thumb.hidden = false; $("pPlaceholder").hidden = true; $("profileMag").hidden = false; };
     thumb.onerror = () => { thumb.hidden = true; $("pPlaceholder").hidden = false; $("profileMag").hidden = true; };
-    image.src = thumb.src = assetUrl(receipt?.preview || "preview-diplome.png");
+    image.src = thumb.src = assetUrl(receipt?.preview || "preview-diplome-0fee65e7c793.png");
     if (image.complete) (image.naturalWidth ? image.onload : image.onerror)();
     if (thumb.complete) (thumb.naturalWidth ? thumb.onload : thumb.onerror)();
   }
