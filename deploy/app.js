@@ -11,7 +11,7 @@
     issuedAt: "2021-01-21",
     number: "FR-F-20-283"
   };
-  const defaultPdf = $("sourcePdf").getAttribute("href");
+  const defaultPdf = $("sourcePdf").getAttribute("href").split("?")[0];
   const publicPageUrl = document.querySelector('link[rel="canonical"]').href;
   const T = {
     "fr": {},
@@ -132,7 +132,11 @@
     if (url.origin !== location.origin) throw new Error("Expected a same-origin document asset");
     return url.href;
   }
-  const pdfUrl = () => assetUrl(receipt?.pdf_file || defaultPdf);
+  const pdfUrl = () => {
+    const url = new URL(assetUrl(receipt?.pdf_file || defaultPdf));
+    url.searchParams.set("v", receipt?.targetHash || "0fee65e7c79340bf273ae9b097a57ee79b418affe3a3a7627f3bfeb50cd54de1");
+    return url.href;
+  };
   async function request(url) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
