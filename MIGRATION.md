@@ -1,9 +1,11 @@
 # Activer smartcertificate.app
 
 Le projet Pages reste `smartcertificate`, branche de production `smartcertificate`.
-Le domaine a été ajouté à ce projet. Dernier état constaté : en attente,
-`CNAME record not set`. Le jeton de cette session ne permet pas de lire ou
-modifier le DNS (403). Le site existant reste sur https://smartcertificate.pages.dev/.
+Le domaine est actif selon l’API Cloudflare, avec validation DNS et HTTPS active.
+L’adresse canonique est désormais https://smartcertificate.app/.
+Le jeton de cette session ne permet pas de lire ou modifier le DNS (403).
+L’adresse technique https://smartcertificate.pages.dev/ reste disponible.
+Les étapes ci-dessous sont conservées comme référence de configuration.
 
 ## Dans Cloudflare, dans cet ordre
 
@@ -45,7 +47,8 @@ Le site utilise des chemins relatifs pour ses ressources : aucun déplacement
 du PDF, des images, du JavaScript ou des polices n'est nécessaire.
 `MIGRATION.patch` prépare le remplacement de l'adresse canonique utilisée
 également par les liens de partage. Il ne modifie aucun texte visible.
-Ne l'appliquez qu'après le fonctionnement HTTPS du nouveau domaine.
+Le patch a déjà été appliqué après confirmation du statut actif par Cloudflare ;
+ne l’appliquez pas une deuxième fois.
 
 Depuis la racine du dépôt Git :
 

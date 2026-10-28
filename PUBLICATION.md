@@ -4,7 +4,7 @@
 
 Conservez les sources dans le dépôt GitHub `anouaramri-glitch/deploy`, avec une copie de travail sur votre ordinateur pour les modifier et les tester.
 Cloudflare Pages héberge les fichiers publiés : votre ordinateur peut être éteint et le site reste accessible.
-Le projet Pages existant est `smartcertificate`. Son adresse principale est `https://smartcertificate.pages.dev/`.
+Le projet Pages existant est `smartcertificate`. Son adresse principale est `https://smartcertificate.app/`. L’adresse technique `https://smartcertificate.pages.dev/` reste disponible.
 La copie préparée dans cette session cloud se trouve dans `/workspace/deploy` ; elle n'est pas votre dossier Windows.
 
 ## Choisir le bon dossier sur votre ordinateur
@@ -63,7 +63,7 @@ npx wrangler@4.152.0 login
 ```
 
 Vérifiez que le compte connecté contient le projet `smartcertificate`. Aucun token ne doit être ajouté au code ni envoyé dans le chat.
-Cette session cloud ne dispose pas actuellement des accès Cloudflare et réseau nécessaires à la publication ; vous pouvez utiliser la connexion OAuth de votre propre ordinateur.
+La session cloud a publié le site via un jeton Cloudflare. Sur votre ordinateur, vous pouvez utiliser la connexion OAuth ci-dessus.
 
 ## 3. Publier sur le projet existant
 
@@ -77,7 +77,7 @@ npx wrangler@4.152.0 pages deploy .\deploy --project-name smartcertificate --bra
 
 Cette commande publie vos fichiers locaux dans le projet existant, après votre validation.
 L'adresse `main.smartcertificate.pages.dev` peut désigner un aperçu de branche ; elle ne prouve pas que le site de production a été remplacé.
-Après succès, vérifiez l'adresse principale `https://smartcertificate.pages.dev/` et le déploiement marqué **Production** dans Cloudflare.
+Après succès, vérifiez l'adresse principale `https://smartcertificate.app/` et le déploiement marqué **Production** dans Cloudflare.
 
 ## Comment modifier le site ensuite ?
 
