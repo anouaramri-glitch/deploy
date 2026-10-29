@@ -130,6 +130,8 @@
     // JSON contains literal filenames; encoding each segment also protects spaces, #, ? and accents.
     const url = new URL(filename.split("/").map(encodeURIComponent).join("/"), document.baseURI);
     if (url.origin !== location.origin) throw new Error("Expected a same-origin document asset");
+    // Keep filenames stable; the version query prevents reusing an older document or preview.
+    url.searchParams.set("v", receipt?.targetHash || "8342cb58c95d55daadcb20df1130e0572595a19996e0fd7a3048acedd9abf636");
     return url.href;
   }
   const pdfUrl = () => {
@@ -207,7 +209,7 @@
     image.onerror = () => { previewFailed = true; image.hidden = true; $("ph").hidden = false; $("previewMag").hidden = true; render(); };
     thumb.onload = () => { thumb.hidden = false; $("pPlaceholder").hidden = true; $("profileMag").hidden = false; };
     thumb.onerror = () => { thumb.hidden = true; $("pPlaceholder").hidden = false; $("profileMag").hidden = true; };
-    image.src = thumb.src = assetUrl(receipt?.preview || "preview-diplome-8342cb58c95d.png");
+    image.src = thumb.src = assetUrl(receipt?.preview || "preview-diplome-0fee65e7c793.png");
     if (image.complete) (image.naturalWidth ? image.onload : image.onerror)();
     if (thumb.complete) (thumb.naturalWidth ? thumb.onload : thumb.onerror)();
   }

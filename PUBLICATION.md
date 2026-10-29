@@ -18,7 +18,7 @@ deploy/
   app.js
   receipt.json
   galileo.png
-  preview-diplome-8342cb58c95d.png
+  preview-diplome-0fee65e7c793.png
   ... PDF et polices
 ```
 
@@ -83,7 +83,7 @@ Après succès, vérifiez l'adresse principale `https://smartcertificate.app/` e
 
 - `deploy/index.html` : textes français, structure HTML et styles CSS. Préservez les formulations existantes hors des changements que vous souhaitez effectuer.
 - `deploy/app.js` : comportements, traductions anglaises et informations documentaires dans `documentInfo`.
-- PDF, `receipt.json` et `preview-diplome-8342cb58c95d.png` : si vous remplacez le PDF, régénérez l’aperçu et calculez son véritable SHA-256 pour mettre à jour `targetHash`. Le reçu actuel décrit l’intégrité du fichier ; signature et ancrage Bitcoin restent non vérifiés.
+- PDF, `receipt.json` et `preview-diplome-0fee65e7c793.png` : si vous remplacez le PDF, régénérez l’aperçu et calculez son véritable SHA-256 pour mettre à jour `targetHash`. Le reçu actuel décrit l’intégrité du fichier ; signature et ancrage Bitcoin restent non vérifiés.
 - `deploy/galileo.png` : image du logo affiché dans l'emplacement existant en bas à gauche.
 
 Après chaque modification, reprenez la validation locale. Si vous travaillez dans un clone Git, avant de commencer vos changements, vérifiez `git status` puis, lorsque votre copie est propre, utilisez `git switch main` et `git pull --ff-only origin main`. Puis enregistrez votre travail :
@@ -101,3 +101,5 @@ Un push GitHub déclenche une publication automatique uniquement si l'intégrati
 Pour ce site statique, cette intégration doit utiliser la bonne racine du dépôt, le dossier de sortie `deploy` et une commande de build vide. Vérifiez ces paramètres avant de vous fier à un déploiement automatique.
 
 Le QR et son lien ne sont pas affichés sur le site. Le logo Galileo figure uniquement sur la page principale. La tuile vidéo garde son apparence et ouvre `video_url` de `deploy/receipt.json` dans un nouvel onglet, sans lecteur intégré ; la vidéo configurée est https://www.youtube.com/watch?v=LIArV8nP5Wk.
+
+Conservez les noms des fichiers lors des mises à jour. Actualisez le contenu, le SHA-256 et les paramètres de version des liens pour éviter le cache.
