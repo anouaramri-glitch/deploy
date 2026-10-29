@@ -18,7 +18,7 @@ deploy/
   app.js
   receipt.json
   galileo.png
-  preview-diplome-0fee65e7c793.png
+  preview-diplome-8342cb58c95d.png
   ... PDF et polices
 ```
 
@@ -83,7 +83,7 @@ Après succès, vérifiez l'adresse principale `https://smartcertificate.app/` e
 
 - `deploy/index.html` : textes français, structure HTML et styles CSS. Préservez les formulations existantes hors des changements que vous souhaitez effectuer.
 - `deploy/app.js` : comportements, traductions anglaises et informations documentaires dans `documentInfo`.
-- PDF, `receipt.json` et `preview-diplome-0fee65e7c793.png` : si vous remplacez le PDF, régénérez l’aperçu et calculez son véritable SHA-256 pour mettre à jour `targetHash`. Le reçu actuel décrit l’intégrité du fichier ; signature et ancrage Bitcoin restent non vérifiés.
+- PDF, `receipt.json` et `preview-diplome-8342cb58c95d.png` : si vous remplacez le PDF, régénérez l’aperçu et calculez son véritable SHA-256 pour mettre à jour `targetHash`. Le reçu actuel décrit l’intégrité du fichier ; signature et ancrage Bitcoin restent non vérifiés.
 - `deploy/galileo.png` : image du logo affiché dans l'emplacement existant en bas à gauche.
 
 Après chaque modification, reprenez la validation locale. Si vous travaillez dans un clone Git, avant de commencer vos changements, vérifiez `git status` puis, lorsque votre copie est propre, utilisez `git switch main` et `git pull --ff-only origin main`. Puis enregistrez votre travail :

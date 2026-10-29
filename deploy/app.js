@@ -134,7 +134,7 @@
   }
   const pdfUrl = () => {
     const url = new URL(assetUrl(receipt?.pdf_file || defaultPdf));
-    url.searchParams.set("v", receipt?.targetHash || "0fee65e7c79340bf273ae9b097a57ee79b418affe3a3a7627f3bfeb50cd54de1");
+    url.searchParams.set("v", receipt?.targetHash || "8342cb58c95d55daadcb20df1130e0572595a19996e0fd7a3048acedd9abf636");
     return url.href;
   };
   async function request(url) {
@@ -207,7 +207,7 @@
     image.onerror = () => { previewFailed = true; image.hidden = true; $("ph").hidden = false; $("previewMag").hidden = true; render(); };
     thumb.onload = () => { thumb.hidden = false; $("pPlaceholder").hidden = true; $("profileMag").hidden = false; };
     thumb.onerror = () => { thumb.hidden = true; $("pPlaceholder").hidden = false; $("profileMag").hidden = true; };
-    image.src = thumb.src = assetUrl(receipt?.preview || "preview-diplome-0fee65e7c793.png");
+    image.src = thumb.src = assetUrl(receipt?.preview || "preview-diplome-8342cb58c95d.png");
     if (image.complete) (image.naturalWidth ? image.onload : image.onerror)();
     if (thumb.complete) (thumb.naturalWidth ? thumb.onload : thumb.onerror)();
   }

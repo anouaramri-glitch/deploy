@@ -1,4 +1,4 @@
-# Proposition visuelle — en attente de validation
+# Proposition visuelle — validée pour publication
 
 - [Détail du rendu proposé](detail-propose.png)
 - [Détail du rendu actuel](detail-actuel.png)
@@ -8,6 +8,5 @@
 Le ruban est opaque en olive #857535 et la bordure utilise la même couleur.
 Les motifs du fond ont une opacité réduite de 20 % par rapport à leur rendu
 actuel. Les textes, la mise en page, les signatures graphiques, le QR et le
-lien cliquable sont conservés. Cette proposition ne remplace pas le PDF en
-production. La publication et la mise à jour de son empreinte attendent la
-validation de l’utilisateur.
+lien cliquable sont conservés. Ce rendu a été validé par l’utilisateur. Il est utilisé pour la publication,
+avec le PDF, les aperçus et l’empreinte actualisés.
