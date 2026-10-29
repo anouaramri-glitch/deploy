@@ -20,7 +20,7 @@
       "congrats": "You opened a duly certified Smart Certificate document issued by <b>ESGF</b>. Any change to the file is detectable and its owner's identity is attested.",
       "owner_lbl": "Document's owner",
       "owner_link": "View owner profile",
-      "issuer_tile": "Click here to learn more about ESGF.",
+      "issuer_tile": "Click here to learn more about<br>ESG Finance.",
       "vid_t": "How it works, in 16 seconds",
       "vid_s": "Click to play the walkthrough",
       "step0": "01 · Fingerprint",
@@ -40,9 +40,9 @@
       "preview_unavailable": "Preview unavailable. You can still open the source PDF below.",
       "source_pdf": "Open the source PDF",
       "back_document": "Back to document",
-      "b1": "Download integrity receipt",
-      "b2": "Validate blockchain reception",
-      "b3": "Download secure PDF",
+      "b1": "Download integrity<br>receipt",
+      "b2": "Verify document<br>integrity",
+      "b3": "Download secure<br>PDF",
       "how_t": "What is Smart Certificate ?",
       "how_l": "It is a document that certifies 3 fundamental things:",
       "how1t": "Integrity",
@@ -58,8 +58,8 @@
       "mail_l": "Open your mail app, or copy the verification link and paste it anywhere.",
       "mail_open": "Open my mail app",
       "copy": "Copy",
-      "val_t": "Blockchain verification",
-      "val_l": "A proof of validity and integrity for each document is stored on the Bitcoin blockchain. This ensures that all our documents contain an <b>immutable proof</b> of their integrity stored on a public, decentralized platform. Below you will find the verification status and the timestamp indicating when the document's integrity was recorded on the blockchain.",
+      "val_t": "Integrity verification",
+      "val_l": "The PDF’s <b>SHA-256</b> fingerprint is computed in your browser and compared with the downloadable receipt. This comparison checks that the file matches the published version exactly.",
       "drop1": "Received a copy of this PDF?",
       "drop2": "Drop it or pick it here",
       "drop3": "to check it has not been modified. The file never leaves your device.",
@@ -164,11 +164,15 @@
     $("pS").textContent = documentInfo.number;
     $("pSearch").placeholder = t("search"); $("pSearch").setAttribute("aria-label", t("search"));
     $("ownerKv").innerHTML = kv([[t("name"), documentInfo.owner], [t("title"), documentInfo.title]]);
-    $("issuerKv").innerHTML = kv([
-      [t("issuer"), documentInfo.issuer], [t("identity"), t("unverified")],
-      [t("signedIdentity"), receipt?.signature?.signedIdentity || "—"], [t("website"), t("websiteMissing")]
-    ]);
+    $("issuerKv").innerHTML = kv([[t("issuer"), documentInfo.issuer], [t("website"), ""]]);
+    const schoolLink = document.createElement("a");
+    schoolLink.href = "https://www.esgf.com/"; schoolLink.textContent = "ESG Finance";
+    schoolLink.target = "_blank"; schoolLink.rel = "noopener noreferrer";
+    $("issuerKv").lastElementChild.append(schoolLink);
     $("fHash").textContent = result?.pdfHash ? "SHA-256 " + result.pdfHash : t("calc");
+    $("integrityStatus").textContent = result?.error ? t("pdfMissing")
+      : result ? (result.matches ? t("c1") : t("c1bad")) : t("calc");
+    $("integrityIcon").toggleAttribute("hidden", !result?.matches);
     $("previewMessage").textContent = previewFailed ? T[lang].preview_unavailable : T[lang].loading;
     filterProfile();
     const url = publicPageUrl, encodedUrl = encodeURIComponent(url);

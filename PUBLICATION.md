@@ -83,7 +83,7 @@ Après succès, vérifiez l'adresse principale `https://smartcertificate.app/` e
 
 - `deploy/index.html` : textes français, structure HTML et styles CSS. Préservez les formulations existantes hors des changements que vous souhaitez effectuer.
 - `deploy/app.js` : comportements, traductions anglaises et informations documentaires dans `documentInfo`.
-- PDF, `receipt.json` et `preview-diplome-0fee65e7c793.png` : si vous remplacez le PDF, régénérez l’aperçu et calculez son véritable SHA-256 pour mettre à jour `targetHash`. Le reçu actuel décrit l’intégrité du fichier ; signature et ancrage Bitcoin restent non vérifiés.
+- PDF, `receipt.json` et `preview-diplome-0fee65e7c793.png` : si vous remplacez le PDF, régénérez l’aperçu et calculez son véritable SHA-256 pour mettre à jour `targetHash`. Le reçu actuel contient le SHA-256 réel du PDF publié et sa taille en octets.
 - `deploy/galileo.png` : image du logo affiché dans l'emplacement existant en bas à gauche.
 
 Après chaque modification, reprenez la validation locale. Si vous travaillez dans un clone Git, avant de commencer vos changements, vérifiez `git status` puis, lorsque votre copie est propre, utilisez `git switch main` et `git pull --ff-only origin main`. Puis enregistrez votre travail :
@@ -103,3 +103,5 @@ Pour ce site statique, cette intégration doit utiliser la bonne racine du dép�
 Le QR et son lien ne sont pas affichés sur le site. Le logo Galileo figure uniquement sur la page principale. La tuile vidéo garde son apparence et ouvre `video_url` de `deploy/receipt.json` dans un nouvel onglet, sans lecteur intégré ; la vidéo configurée est https://www.youtube.com/watch?v=LIArV8nP5Wk.
 
 Conservez les noms des fichiers lors des mises à jour. Actualisez le contenu, le SHA-256 et les paramètres de version des liens pour éviter le cache.
+
+La tuile ESG Finance ouvre https://www.esgf.com/ dans un nouvel onglet. Les boutons du reçu et du contrôle portent des libellés d’intégrité en français et en anglais. Le reçu est un `SHA256FileChecksum` ; il contient l’empreinte et la taille du PDF actuel.

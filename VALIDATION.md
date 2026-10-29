@@ -122,3 +122,7 @@ Production : déploiement `32d4475d-b2f4-4073-b677-505917b7c4a0`, branche `smart
 ## Pied de page et vidéo
 
 QR et lien associé supprimés de la page et des ressources déployables. Galileo réintégré dans la page principale uniquement. La tuile vidéo conserve son affichage et ouvre uniquement une URL externe configurée dans receipt.video_url ; sans URL réelle, un message signale sa configuration manquante. Aucun lecteur ou aperçu vidéo intégré ni animation au clic. Tests desktop/mobile réussis, y compris ouverture simulée avec une URL de test non enregistrée dans la configuration publiée.
+
+## Tuile ESG Finance, reçu et logo
+
+La tuile ouvre https://www.esgf.com/ dans un nouvel onglet. Contrôles Chromium aux largeurs 1440 et 390 px : libellés français et anglais, reçu téléchargé identique au JSON public, nom du PDF conservé, deux aperçus chargés, logo agrandi uniquement sur la page principale, absence de débordement horizontal. Le SHA-256 réel correspond au reçu ; un PDF modifié est rejeté par le contrôle d’intégrité. Le reçu contient uniquement les données d’intégrité du fichier actuel et les chemins des ressources.

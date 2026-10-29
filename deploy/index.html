@@ -47,7 +47,7 @@ button{font:inherit;cursor:pointer}
 .owner .name{font-size:20px;font-weight:700;margin:2px 0 6px;letter-spacing:.005em}
 .linkbtn{background:none;border:0;padding:0;color:#2f6fd6;font-weight:600;font-size:13.5px;display:inline-flex;align-items:center;gap:4px}
 .linkbtn:hover{text-decoration:underline}
-.issuer{background:var(--brand);color:#fff;border:0;min-height:172px;padding:24px 40px;text-align:center;font-weight:700;font-size:13.5px;line-height:1.35;display:grid;place-items:center;transition:background .15s}
+.issuer{background:#4066ff;color:#fff;border:0;min-height:172px;padding:24px 40px;text-align:center;font-weight:700;font-size:14px;line-height:18px;display:grid;place-items:center;transition:background .15s}
 .issuer:hover{background:var(--brand-deep)}
 
 .video{position:relative;background:radial-gradient(120% 90% at 78% 55%,#2a1840 0%,#120f1d 45%,var(--night) 80%);color:#fff;min-height:172px;overflow:hidden;border:0;text-align:left;padding:0}
@@ -101,16 +101,16 @@ button{font:inherit;cursor:pointer}
 .share svg{width:15px;height:15px;fill:currentColor}
 .s-in{background:#0a66c2}.s-fb{background:#1877f2}.s-x{background:#1da1f2}.s-wa{background:#25d366}.s-ml{background:#334155}
 
-.actions{display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;gap:12px;margin-top:40px;padding:0 30px 0 30px}
-.act{background:var(--brand);color:#fff;border:0;border-radius:3px;padding:10px 14px;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 1px 2px rgba(53,84,224,.25)}
+.actions{display:grid;grid-template-columns:1.22fr 1.22fr 1fr;gap:8px;margin-top:40px;padding:0}
+.act{background:#4066ff;color:#fff;border:0;border-radius:4px;min-height:60px;padding:10px 16px;font-weight:700;font-size:16px;line-height:18px;text-align:left;display:inline-flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 1px 2px rgba(53,84,224,.25)}
 .act:hover{background:var(--brand-deep)}
-.act svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:1.6}
+.act svg{width:24px;height:24px;flex:none;fill:none;stroke:#fff;stroke-width:1.6}
 .act[aria-busy="true"]{opacity:.7}
 
 a.issuer{text-decoration:none}
 a.vlink{text-decoration:none;display:block}
-.logocard{background:#fff;min-height:172px;display:grid;place-items:center;padding:24px;margin-top:0}
-.logocard img{max-width:130px;max-height:96px;width:auto;height:auto}
+.logocard{background:#fff;min-height:216px;display:grid;place-items:center;padding:8px;margin-top:0}
+.logocard img{width:200px;height:200px;max-width:100%;object-fit:contain;transform:scale(1.1)}
 .logoword{font-weight:500;color:#5b6578;font-size:15px;letter-spacing:.02em;text-align:center}
 /* owner profile view, mirrors the reference profile page */
 .profile{max-width:826px;margin:56px auto 0}
@@ -200,6 +200,7 @@ a.vlink{text-decoration:none;display:block}
   body{padding-top:62px}
   .row{grid-template-columns:minmax(0,1fr)}
   .issuer,.video{min-height:150px}
+  .issuer{min-height:215px;padding:28px;font-size:16px;line-height:18px}
   .doc{padding:16px 12px 20px}
   .secured{margin:6px 0 14px}
   .seal{width:48px;height:48px}.seal svg{width:24px;height:24px}
@@ -207,7 +208,7 @@ a.vlink{text-decoration:none;display:block}
   .stage{grid-template-columns:minmax(0,1fr)}
   .share{flex-direction:row;justify-content:center}
   .actions{grid-template-columns:minmax(0,1fr);padding:0;margin-top:22px}
-  .act{justify-content:center}
+  .act{justify-content:space-between}
   .modal{padding:26px 20px 26px}
   .kv{grid-template-columns:1fr;gap:2px 0}.kv dd{margin-bottom:8px}
 }
@@ -234,8 +235,7 @@ a.vlink{text-decoration:none;display:block}
   </div>
 
   <div class="row">
-    <a class="card issuer" id="issuerLink" target="_blank" rel="noopener" href="#" hidden><span id="issuerLinkTxt"></span></a>
-    <button class="card issuer" id="issuerBtn" type="button" data-open="mIssuer"><span data-i="issuer_tile">Cliquez ici et découvrez plus d'informations à propos de l'Institut Galileo </span></button>
+    <a class="card issuer" id="issuerLink" target="_blank" rel="noopener noreferrer" href="https://www.esgf.com/"><span data-i="issuer_tile">Cliquez ici et découvrez plus d'informations à propos<br>d'ESG Finance.</span></a>
     <a class="card video vlink" id="mediaLink" target="_blank" rel="noopener" href="#" hidden>
       <div class="inner"><div class="yt"><span class="play"><svg width="9" height="10" viewBox="0 0 9 10"><path d="M0 0l9 5-9 5z" fill="#fff"/></svg></span><span id="mediaSrc"></span></div><h3 id="mediaLabel"></h3><small id="mediaHint"></small></div>
     </a>
@@ -278,9 +278,9 @@ a.vlink{text-decoration:none;display:block}
     </div>
 
     <div class="actions">
-      <button class="act" type="button" id="btnReceipt"><span data-i="b1">Télécharger le reçu d’intégrité</span><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4v14.4H6z"/><path d="M14 2.8v4h4M9 12h6M9 15h6M9 18h4"/></svg></button>
-      <button class="act" type="button" data-open="mValidate"><span data-i="b2">Valider la réception blockchain</span><svg viewBox="0 0 24 24"><path d="M5 2.8h9l4 4v6"/><path d="M5 2.8v18.4h7M8 9h6M8 12h5"/><circle cx="16.5" cy="17" r="3.2"/><path d="M19 19.5l2.4 2.4"/></svg></button>
-      <button class="act" type="button" id="btnPdf"><span data-i="b3">Télécharger le PDF sécurisé</span><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4v14.4H6z"/><rect x="9" y="12.5" width="6" height="5" rx=".8"/><path d="M10.2 12.5v-1.3a1.8 1.8 0 0 1 3.6 0v1.3"/></svg></button>
+      <button class="act" type="button" id="btnReceipt"><span data-i="b1">Télécharger le reçu<br>d’intégrité</span><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4v14.4H6z"/><path d="M14 2.8v4h4M9 12h6M9 15h6M9 18h4"/></svg></button>
+      <button class="act" type="button" data-open="mValidate"><span data-i="b2">Vérifier l’intégrité<br>du document</span><svg viewBox="0 0 24 24"><path d="M5 2.8h9l4 4v6"/><path d="M5 2.8v18.4h7M8 9h6M8 12h5"/><circle cx="16.5" cy="17" r="3.2"/><path d="M19 19.5l2.4 2.4"/></svg></button>
+      <button class="act" type="button" id="btnPdf"><span data-i="b3">Télécharger le PDF<br>sécurisé</span><svg viewBox="0 0 24 24"><path d="M6 2.8h8l4 4v14.4H6z"/><rect x="9" y="12.5" width="6" height="5" rx=".8"/><path d="M10.2 12.5v-1.3a1.8 1.8 0 0 1 3.6 0v1.3"/></svg></button>
     </div>
   </section>
 
@@ -343,12 +343,12 @@ a.vlink{text-decoration:none;display:block}
   <button class="reference-close" type="button" data-close aria-label="Fermer">×</button>
   <div class="blockchain-heading">
     <svg class="blockchain-lock" viewBox="0 0 32 42" aria-hidden="true"><path d="M6 16v-5a10 10 0 0 1 20 0v5"/><rect x="2" y="16" width="28" height="24" rx="1"/></svg>
-    <h2 id="hVal" data-i="val_t">Vérification de la blockchain</h2>
+    <h2 id="hVal" data-i="val_t">Vérification de l’intégrité</h2>
   </div>
-  <p class="blockchain-explanation" id="blockchainExplanation" data-i="val_l">Une preuve de validité et d’intégrité pour chaque document est stockée dans la blockchain Bitcoin. Cela garantit que tous nos documents contiennent une <b>preuve inaltérable</b> de leur intégrité stockée sur une plateforme publique et décentralisée. Vous trouverez ci-dessous le statut de la vérification et l’horodatage le moment auquel l’intégrité du document a été stockée dans la blockchain.</p>
-  <div class="blockchain-reference-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2 12 6 6L22 4l-4-4L8 10 6 8Z"/></svg><span>@</span></div>
+  <p class="blockchain-explanation" id="blockchainExplanation" data-i="val_l">L’empreinte numérique <b>SHA-256</b> du PDF est calculée dans votre navigateur et comparée à celle du reçu téléchargeable. Cette comparaison permet de vérifier que le fichier correspond exactement à la version publiée.</p>
+  <div class="blockchain-reference-bar" role="status"><svg id="integrityIcon" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="m2 12 6 6L22 4l-4-4L8 10 6 8Z"/></svg><span id="integrityStatus">Calcul de l’empreinte…</span></div>
 </div></div>
 
-<script src="app.js?v=8342cb58c95d-3" defer></script>
+<script src="app.js?v=8342cb58c95d-esgf-1" defer></script>
 
 </body></html>
