@@ -105,3 +105,5 @@ Le QR et son lien ne sont pas affichés sur le site. Le logo Galileo figure uniq
 Conservez les noms des fichiers lors des mises à jour. Actualisez le contenu, le SHA-256 et les paramètres de version des liens pour éviter le cache.
 
 La tuile ESG Finance ouvre https://www.esgf.com/ dans un nouvel onglet. Les boutons du reçu et du contrôle portent des libellés d’intégrité en français et en anglais. Le reçu est un `SHA256FileChecksum` ; il contient l’empreinte et la taille du PDF actuel.
+
+Le sélecteur affiche la langue active : FR pour le français, EN pour l’anglais. Un clic change de langue, et le choix est conservé après actualisation.

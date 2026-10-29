@@ -89,7 +89,7 @@
       name: "Nom", title: "Titre", issuer: "Émetteur indiqué sur le PDF", identity: "Identité de l'émetteur",
       unverified: "Non vérifiée par cette page", signedIdentity: "Identité déclarée dans le reçu",
       website: "Site de l'émetteur", websiteMissing: "Lien officiel non configuré",
-      search: "Rechercher", close: "Fermer", share: "Partager", language: "Passer en anglais",
+      search: "Rechercher", close: "Fermer", share: "Partager", language: "Langue actuelle : français. Passer en anglais.",
       preview: "Visualiser le document PDF", thumbnail: "Aperçu du certificat", video: "Lire la présentation",
       mail: "Partager par e-mail", copyLabel: "Lien de vérification", shareText: "Mon certificat vérifiable : "
     },
@@ -111,7 +111,7 @@
       name: "Name", title: "Title", issuer: "Issuer shown on the PDF", identity: "Issuer identity",
       unverified: "Not verified by this page", signedIdentity: "Identity declared in the receipt",
       website: "Issuer website", websiteMissing: "Official link not configured",
-      search: "Search", close: "Close", share: "Share", language: "Switch to French",
+      search: "Search", close: "Close", share: "Share", language: "Current language: English. Switch to French.",
       preview: "View the PDF document", thumbnail: "Certificate preview", video: "Play the walkthrough",
       mail: "Share by email", copyLabel: "Verification link", shareText: "My verifiable certificate: "
     }
@@ -189,8 +189,9 @@
     document.querySelectorAll("[data-i]").forEach(el => {
       const text = T[lang][el.dataset.i]; if (text != null) el.innerHTML = text;
     });
-    $("lang").textContent = lang === "fr" ? "EN" : "FR";
+    $("lang").textContent = lang.toUpperCase();
     $("lang").setAttribute("aria-label", t("language"));
+    $("lang").title = t("language");
     $("previewLink").setAttribute("aria-label", t("preview"));
     $("preview").alt = t("thumbnail"); $("video").setAttribute("aria-label", t("video"));
     $("copyUrl").setAttribute("aria-label", t("copyLabel"));
